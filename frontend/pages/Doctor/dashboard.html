@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ABC Hospital - Doctor Dashboard</title>
+  <link rel="stylesheet" href="style.css"> <!-- global styles -->
+  <link rel="stylesheet" href="dashboard.css"> <!-- dashboard-only styles -->
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo">🏥 ABC Hospital</div>
+  </nav>
+
+  <!-- Main Container -->
+  <main class="container dashboard-center">
+    <h2>Welcome, <span id="doctorName"></span></h2>
+    <a href="appointments.html" class="btn-cta">📅 Show My Appointments</a>
+  </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const doctorName = localStorage.getItem("doctorUsername") || "Doctor";
+      document.getElementById("doctorName").textContent = doctorName;
+    });
+  </script>
+</body>
+</html>

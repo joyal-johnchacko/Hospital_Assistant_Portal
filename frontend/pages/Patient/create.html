@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Appointment | ABC Hospital</title>
+  <link rel="stylesheet" href="styleforcreateapp.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body class="page-create-appointment">
+
+  <nav class="navbar">
+    <div class="logo">🏥 ABC Hospital</div>
+    <ul class="nav-links">
+      <li><a href="dashboard.html" class="btn-back">← Back</a></li>
+    </ul>
+  </nav>
+
+  <main class="container">
+    <form id="appointmentForm">
+      <h2>Create Appointment</h2>
+
+      <div class="input-group">
+        <span class="icon"><i class="fa fa-user"></i></span>
+        <input type="text" name="patientName" placeholder="Enter patient name" required>
+      </div>
+
+      <div class="input-group">
+        <span class="icon"><i class="fa fa-cake-candles"></i></span>
+        <input type="number" name="patientAge" placeholder="Enter patient's age" min="0" required>
+      </div>
+
+      <div class="input-group">
+        <span class="icon"><i class="fa fa-clock"></i></span>
+        <input type="time" name="appointmentTime" required>
+      </div>
+
+      <div class="input-group">
+        <span class="icon"><i class="fa fa-notes-medical"></i></span>
+        <input type="text" name="reason" placeholder="Enter reason for visit" required>
+      </div>
+
+      <button type="submit">Save Appointment</button>
+    </form>
+  </main>
+
+  <!-- ✅ Success message container -->
+  <div id="successMessage" class="success-message">
+    ✅ Appointment booked successfully!
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

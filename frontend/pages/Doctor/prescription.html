@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Prescription</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="page-create-prescription">
+  <nav class="navbar">
+    <div class="logo">🏥 ABC Hospital</div>
+    <a href="appointments.html" class="btn-back">← Back to Appointments</a>
+  </nav>
+
+  <main class="container">
+    <h2>Prescription</h2>
+    <form id="prescriptionForm">
+      <label>Patient Name:</label>
+      <input type="text" id="prescPatientName" readonly><br>
+
+      <label>Diagnosis:</label>
+      <input type="text" id="diagnosis" required><br>
+
+      <label>Medicines:</label>
+      <div id="medicinesList"></div>
+
+      <button type="button" id="addMedicineBtn" class="btn-secondary">+ Add Medicine</button>
+      <br><br>
+
+      <label>Advice:</label>
+      <textarea id="advice"></textarea><br>
+
+      <!-- ✅ New Save Button -->
+      <button type="button" id="savePrescriptionBtn">💾 Save Prescription</button>
+
+      <!-- Existing Generate Button -->
+      <button type="submit">Generate Prescription</button>
+    </form>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

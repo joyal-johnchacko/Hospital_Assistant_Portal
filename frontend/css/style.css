@@ -1,0 +1,65 @@
+body {
+    font-family: Arial, sans-serif;
+    /* Use your aesthetic background image */
+    background: url("../assets/front.jpg") no-repeat center center fixed;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    color: #ffffff; /* White text for overall contrast */
+}
+
+/* --- Welcome Page Specific Styles --- */
+.welcome-container {
+    text-align: center;
+    /* Apply a subtle glassmorphism effect to the container itself if you want,
+       or just let the text float on the background.
+       For this example, I'll make the text and buttons more prominent
+       without a full container box for the text. */
+}
+
+.welcome-container h1 {
+    font-size: 2.8em; /* Larger, more impactful heading */
+    font-weight: bold;
+    margin-bottom: 50px; /* Space between title and buttons */
+    /* Add a subtle text shadow for better readability on complex backgrounds */
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.welcome-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 30px; /* Space between the two buttons */
+}
+
+.login-btn,
+.signup-btn {
+    width: 140px; /* Slightly wider buttons */
+    padding: 15px 25px; /* More padding */
+    border: none;
+    border-radius: 10px; /* More rounded corners */
+    cursor: pointer;
+    font-size: 1.1em; /* Slightly larger font */
+    font-weight: bold;
+    color: #ffffff;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3); /* Deeper shadow */
+    transition: all 0.3s ease;
+}
+
+.login-btn {
+    /* Example gradient for Login button */
+    background: linear-gradient(to right, #4CAF50, #8BC34A); /* Greenish gradient */
+}
+
+.signup-btn {
+    /* Example gradient for Sign Up button (similar to your previous sign-up button) */
+    background: linear-gradient(to right, #6A11CB, #2575FC); /* Purple-blue gradient */
+}
+
+.login-btn:hover,
+.signup-btn:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+    transform: translateY(-3px); /* More pronounced lift effect */
+}

@@ -1,0 +1,114 @@
+/* Reset default margins and padding */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Ensure html and body take full height */
+html, body {
+    height: 100%;
+    width: 100%;
+}
+
+/* Body styling with background image */
+body {
+    font-family: Arial, sans-serif;
+
+    /* Background setup */
+    background-image: url("login_bg.png"); /* Make sure this path is correct */
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed;
+
+    /* Center admin panel */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    /* Text color */
+    color: #ffffff;
+
+    /* Prevent horizontal scroll */
+    overflow-x: hidden;
+}
+
+/* Admin panel container */
+.admin-container {
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(15px);
+    padding: 40px 50px;
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+    width: 350px;
+    max-width: 90vw;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+    z-index: 1;
+}
+
+/* Heading inside admin panel */
+.admin-container h1 {
+    font-size: 2.2em;
+    margin-bottom: 40px;
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* Buttons container */
+.admin-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Button common styles */
+.manage-btn,
+.logout-btn {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #ffffff;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+/* Specific button colors */
+.manage-btn {
+    background: linear-gradient(to right, #6A11CB, #2575FC);
+}
+
+.logout-btn {
+    background: linear-gradient(to right, #3A4750, #16213E);
+}
+
+/* Button hover effects */
+.manage-btn:hover,
+.logout-btn:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+    transform: translateY(-3px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .admin-container {
+        width: 90vw;
+        padding: 30px 25px;
+    }
+    
+    .admin-container h1 {
+        font-size: 1.8em;
+        margin-bottom: 30px;
+    }
+
+    .manage-btn,
+    .logout-btn {
+        font-size: 1em;
+        padding: 12px;
+    }
+}

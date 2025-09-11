@@ -1,0 +1,329 @@
+/* --- Global Styles --- */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: #f5f7fa;
+}
+
+.container {
+  padding: 30px;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+/* Dashboard-specific styles */
+
+.dashboard-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 80px); /* full height minus navbar */
+  text-align: center;
+}
+
+.dashboard-center h2 {
+  font-size: 28px;
+  margin-bottom: 20px;
+  color: #004f7c;
+}
+
+.dashboard-center .btn-cta {
+  font-size: 18px;
+  padding: 14px 24px;
+}
+
+/* --- Navbar (Same for all pages) --- */
+.navbar {
+  background: linear-gradient(to right, #2d89b9, #004f7c);
+  color: white;
+  padding: 15px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.btn-cta, .btn-back {
+  background: #e63946;
+  padding: 10px 18px;
+  color: white;
+  text-decoration: none;
+  border-radius: 25px;
+  font-weight: bold;
+}
+
+.navbar .btn-cta:hover, .navbar .back-btn:hover {
+  background-color: #999;
+  color: #fff;
+}
+
+.nav-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* --- Doctor Dashboard (appointments.html) --- */
+.appointments {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.appointments th, .appointments td {
+  border: 1px solid #ddd;
+  padding: 12px 15px;
+  text-align: left;
+}
+
+.appointments th {
+  background: #f2f6f9;
+  font-weight: bold;
+}
+
+.appointments button {
+  background: #2575fc;
+  color: white;
+  padding: 8px 15px;
+}
+
+.appointments button:hover {
+  background: #1f65d6;
+}
+
+.appointments .delete-btn {
+  background: #e74c3c; /* Red */
+}
+
+.appointments .delete-btn:hover {
+  background: #c0392b; /* Darker red on hover */
+}
+
+
+/* --- Create Appointment Page Styles (page-create-appointment) --- */
+.page-create-appointment form {
+  max-width: 500px;
+  margin: 30px auto;
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.page-create-appointment h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #004f7c;
+}
+
+.page-create-appointment .input-group {
+  display: flex;
+  align-items: center;
+  background: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-bottom: 20px;
+}
+
+.page-create-appointment .input-group .icon {
+  color: #004f7c;
+  font-size: 16px;
+  margin-right: 10px;
+}
+
+.page-create-appointment .input-group input {
+  border: none;
+  outline: none;
+  flex-grow: 1;
+  font-size: 14px;
+  background: transparent;
+  padding: 8px;
+}
+
+.page-create-appointment button[type="submit"] {
+  background: linear-gradient(to right, #2d89b9, #004f7c);
+  color: #fff;
+  font-size: 16px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: bold;
+  width: 100%; /* Make button full-width */
+}
+
+.page-create-appointment button[type="submit"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+
+/* --- Create Prescription Page Styles (page-create-prescription) --- */
+.page-create-prescription form {
+  max-width: 800px;
+  margin: 30px auto;
+  background: #ffffff;
+  padding: 30px 40px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+}
+
+.page-create-prescription h2 {
+  color: #333;
+  border-bottom: 2px solid #2d89b9;
+  padding-bottom: 10px;
+  margin-bottom: 25px;
+}
+
+.page-create-prescription label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #555;
+  font-size: 14px;
+}
+
+.page-create-prescription input[type="text"],
+.page-create-prescription textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.page-create-prescription textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.page-create-prescription #prescPatientName {
+  background-color: #f0f0f0;
+  font-weight: bold;
+}
+
+.page-create-prescription #addMedicineBtn {
+  background: #28a745;
+  color: white;
+  padding: 8px 15px;
+  margin-top: 5px;
+}
+
+.page-create-prescription #addMedicineBtn:hover {
+  background: #218838;
+}
+
+.page-create-prescription button[type="submit"] {
+  background: #004f7c;
+  color: #fff;
+  font-size: 16px;
+  padding: 12px 25px;
+  display: block; /* Make it a block element */
+  margin-top: 20px;
+}
+
+.page-create-prescription button[type="submit"]:hover {
+  background: #003a5c;
+}
+
+/* Medicine Row Layout for Prescription Page */
+/* Medicine Row Layout for Prescription Page */
+/* style.css */
+
+/* Main container for the medicine row */
+.medicine-row {
+  display: flex;
+  align-items: center; /* Vertically centers all items in the row */
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+/* THE FIX: An aggressive reset for ALL items in the row.
+  This forces every element to have the exact same box model.
+*/
+.medicine-row input,
+.medicine-row .remove-btn {
+  /* --- Core Alignment Fixes --- */
+  height: 38px;               /* 1. Enforce a single, identical height */
+  box-sizing: border-box;     /* 2. Makes padding and border part of the height */
+  margin:0;                  /* 3. CRITICAL: Removes any hidden default browser margins */
+  vertical-align: middle;     /* 4. A fallback that helps with text-based elements */
+
+  /* --- Consistent Appearance --- */
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;       /* Note: Button radius is overridden below */
+  font-size: 14px;
+}
+
+/* Input sizes within the row */
+.medicine-row input.med-name { flex: 3; }
+.medicine-row input.med-dose { flex: 2; }
+
+/* FIX 1: Aligning the 'Times/day' box by centering its text */
+.medicine-row input.med-times {
+  flex: 1;
+  min-width: 80px;
+  text-align: center; /* This centers the text inside the box */
+}
+
+/* FIX 2: Softer, modern color for the remove button */
+/* style.css (place this AFTER the block above) */
+
+/* Re-apply unique styles for the remove button */
+.medicine-row .remove-btn {
+  background-color: #fbeae9;
+  color: #c0392b;
+  border-color: #f5c6cb;
+  border-radius: 50%;      /* Make it a circle again */
+  width: 38px;             /* Match the height to ensure it's a perfect circle */
+  padding: 0;              /* Remove padding for circular buttons */
+  font-size: 18px;
+  line-height: 36px;     /* Adjust to perfectly center the '×' symbol */
+  text-align: center;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.medicine-row .remove-btn:hover {
+  background-color: #e74c3c;
+  color: #fff;
+  border-color: #e74c3c;
+}
+
+
+/* --- ✅ Success Message Styles (added) --- */
+.success-message {
+  display: none; /* hidden by default */
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: linear-gradient(135deg, #28a745, #218838);
+  color: #fff;
+  padding: 15px 25px;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: bold;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  z-index: 9999;
+  animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(150%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
