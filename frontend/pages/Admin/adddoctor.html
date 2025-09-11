@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Doctor</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f7f7f7;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    form {
+      max-width: 500px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      border-radius: 4px;
+      margin-right: 10px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .back-btn {
+      background-color: #2196F3;
+    }
+    .back-btn:hover {
+      background-color: #0b7dda;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Add Doctor</h1>
+
+<form id="addDoctorForm">
+  <input type="text" id="name" placeholder="Doctor Name" required>
+  <input type="text" id="specialization" placeholder="Specialization" required>
+  <input type="text" id="phone" placeholder="Phone Number" required>
+  <input type="email" id="email" placeholder="Email" required>
+  <div>
+    <button type="submit">Add Doctor</button>
+    <button type="button" class="back-btn" onclick="location.href='users.html'">Back</button>
+  </div>
+</form>
+
+<script>
+  document.getElementById('addDoctorForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    let doctors = JSON.parse(localStorage.getItem('doctors')) || [];
+
+    const newDoctor = {
+      id: doctors.length ? doctors[doctors.length - 1].id + 1 : 1,
+      name: document.getElementById('name').value,
+      specialization: document.getElementById('specialization').value,
+      phone: document.getElementById('phone').value,
+      email: document.getElementById('email').value
+    };
+
+    doctors.push(newDoctor);
+    localStorage.setItem('doctors', JSON.stringify(doctors));
+
+    this.reset();
+    alert('Doctor added successfully!');
+    location.href = 'adddoctor.html';
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>View & Delete Doctors</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f7f7f7;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #fff;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: left;
+    }
+    th {
+      background-color: #4CAF50;
+      color: white;
+    }
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+    .delete-btn {
+      padding: 6px 12px;
+      background-color: #f44336;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    .delete-btn:hover {
+      background-color: #d32f2f;
+    }
+    .back-btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Doctors List</h1>
+
+<table id="doctorsTable">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Specialization</th>
+      <th>Phone</th>
+      <th>Email</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- Table rows will be inserted by JS -->
+  </tbody>
+</table>
+
+<button class="back-btn" onclick="location.href='users.html'">Back</button>
+
+<script>
+  // Initial doctors data
+  const initialDoctors = [
+    { id: 1, name: 'Omair Ismail', specialization: 'Cardiologist', phone: '123-456-7890', email: 'omair@example.com' },
+    { id: 2, name: 'Bhagath Krishna', specialization: 'Dermatologist', phone: '987-654-3210', email: 'bhagath@example.com' }
+  ];
+
+  // Load doctors from localStorage or use initial data
+  let doctors = JSON.parse(localStorage.getItem('doctors')) || initialDoctors;
+
+  function renderTable() {
+    const tbody = document.querySelector('#doctorsTable tbody');
+    tbody.innerHTML = '';
+    doctors.forEach((doc, index) => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${doc.id}</td>
+        <td>${doc.name}</td>
+        <td>${doc.specialization}</td>
+        <td>${doc.phone}</td>
+        <td>${doc.email}</td>
+        <td><button class="delete-btn" onclick="deleteDoctor(${index})">Delete</button></td>
+      `;
+      tbody.appendChild(row);
+    });
+  }
+
+  function deleteDoctor(index) {
+    if (confirm('Are you sure you want to delete this doctor?')) {
+      doctors.splice(index, 1); // Remove from array
+      localStorage.setItem('doctors', JSON.stringify(doctors)); // Save updated array
+      renderTable(); // Re-render table
+    }
+  }
+
+  // Initial render
+  renderTable();
+</script>
+
+</body>
+</html>
