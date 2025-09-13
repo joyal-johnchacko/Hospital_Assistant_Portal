@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } 
         else if (role === "receptionist") {
             localStorage.setItem("receptionistUsername", username || "Receptionist");
-            window.location.href = "../pages/receptionistDashboard.html";
+            window.location.href = "../Receptionist/index.html";
     } 
         else if (role === "admin") {
             localStorage.setItem("adminUsername", username || "Admin");
