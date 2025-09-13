@@ -122,7 +122,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const apptIndex = appointments.findIndex(
         appt =>
           appt.patientName === selectedAppt.patientName &&
-          appt.appointmentDate === selectedAppt.appointmentDate &&
           appt.appointmentTime === selectedAppt.appointmentTime
       );
       if (apptIndex > -1) {
