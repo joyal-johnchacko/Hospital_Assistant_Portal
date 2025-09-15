@@ -4,8 +4,208 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ABC Hospital - Doctor Dashboard</title>
-  <link rel="stylesheet" href="style.css"> <!-- global styles -->
-  <link rel="stylesheet" href="dashboard.css"> <!-- dashboard-only styles -->
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #ffffff;
+      min-height: 100vh;
+      color: #333;
+    }
+
+    .navbar {
+      background: #ffffff;
+      padding: 1.5rem 2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #2563eb;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+
+    .header-section {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .welcome-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #1f2937;
+      margin-bottom: 0.5rem;
+    }
+
+    .welcome-subtitle {
+      font-size: 1.2rem;
+      color: #6b7280;
+      margin-bottom: 2rem;
+    }
+
+    .stats-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      margin-bottom: 4rem;
+    }
+
+    .stat-card {
+      background: #ffffff;
+      padding: 2.5rem 2rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      border: 1px solid #f3f4f6;
+      text-align: center;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #2563eb, #3b82f6);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 30px rgba(37, 99, 235, 0.15);
+    }
+
+    .stat-icon {
+      font-size: 3rem;
+      margin-bottom: 1.5rem;
+      opacity: 0.8;
+    }
+
+    .stat-number {
+      font-size: 3rem;
+      font-weight: 800;
+      color: #1f2937;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      font-size: 1.1rem;
+      color: #6b7280;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .actions-section {
+      text-align: center;
+      margin-top: 3rem;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1.25rem 2.5rem;
+      background: #2563eb;
+      color: white;
+      text-decoration: none;
+      border-radius: 12px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-primary:hover {
+      background: #1d4ed8;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(37, 99, 235, 0.4);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .date-time {
+      background: #f8fafc;
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      display: inline-block;
+      color: #64748b;
+      font-weight: 500;
+      margin-bottom: 1rem;
+      border: 1px solid #e2e8f0;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 2rem 1rem;
+      }
+      
+      .stats-container {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      
+      .welcome-title {
+        font-size: 2rem;
+      }
+      
+      .welcome-subtitle {
+        font-size: 1rem;
+      }
+
+      .navbar {
+        padding: 1rem;
+      }
+
+      .logo {
+        font-size: 1.5rem;
+      }
+
+      .stat-card {
+        padding: 2rem 1.5rem;
+      }
+
+      .stat-number {
+        font-size: 2.5rem;
+      }
+
+      .btn-primary {
+        padding: 1rem 2rem;
+        font-size: 1.1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .stats-container {
+        gap: 1rem;
+      }
+      
+      .stat-card {
+        padding: 1.5rem 1rem;
+      }
+    }
+  </style>
 </head>
 <body>
   <!-- Navbar -->
@@ -14,15 +214,101 @@
   </nav>
 
   <!-- Main Container -->
-  <main class="container dashboard-center">
-    <h2>Welcome, <span id="doctorName"></span></h2>
-    <a href="appointments.html" class="btn-cta">📅 Show My Appointments</a>
-  </main>
+  <div class="container">
+    <!-- Header Section -->
+    <div class="header-section">
+      <div class="date-time" id="currentDateTime"></div>
+      <h1 class="welcome-title">Welcome, Dr. <span id="doctorName">Smith</span></h1>
+      <p class="welcome-subtitle">Your practice overview at a glance</p>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="stats-container">
+      <div class="stat-card">
+        <div class="stat-icon">📅</div>
+        <div class="stat-number" id="totalAppointments">0</div>
+        <div class="stat-label">Total Appointments</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon">👥</div>
+        <div class="stat-number" id="totalPatients">0</div>
+        <div class="stat-label">Patients Managed</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon">📋</div>
+        <div class="stat-number" id="totalPrescriptions">0</div>
+        <div class="stat-label">Prescriptions Written</div>
+      </div>
+    </div>
+
+    <!-- Actions Section -->
+    <div class="actions-section">
+      <a href="appointments.html" class="btn-primary">
+        📅 View Appointments
+      </a>
+    </div>
+  </div>
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      const doctorName = localStorage.getItem("doctorUsername") || "Doctor";
+      // Get doctor name from localStorage or use default
+      const doctorName = localStorage.getItem("doctorUsername") || "Smith";
       document.getElementById("doctorName").textContent = doctorName;
+
+      // Update date and time
+      function updateDateTime() {
+        const now = new Date();
+        const options = { 
+          weekday: 'long', 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: true
+        };
+        document.getElementById("currentDateTime").textContent = now.toLocaleDateString('en-US', options);
+      }
+      
+      updateDateTime();
+      setInterval(updateDateTime, 60000); // Update every minute
+
+      // Load appointment data and calculate statistics
+      const appointments = JSON.parse(localStorage.getItem("appointments")) || [];
+      
+      // Calculate total prescriptions across all appointments
+      const totalPrescriptions = appointments.reduce((count, appointment) => {
+        if (appointment.prescriptionsHistory) {
+          return count + appointment.prescriptionsHistory.length;
+        }
+        return appointment.prescription ? count + 1 : count;
+      }, 0);
+
+      // Update statistics with animation
+      function animateNumber(element, targetNumber) {
+        const duration = 1000;
+        const steps = 30;
+        const increment = targetNumber / steps;
+        let current = 0;
+        
+        const timer = setInterval(() => {
+          current += increment;
+          if (current >= targetNumber) {
+            current = targetNumber;
+            clearInterval(timer);
+          }
+          element.textContent = Math.floor(current);
+        }, duration / steps);
+      }
+
+      // Animate statistics
+      setTimeout(() => {
+        animateNumber(document.getElementById("totalAppointments"), appointments.length);
+        animateNumber(document.getElementById("totalPatients"), appointments.length);
+        animateNumber(document.getElementById("totalPrescriptions"), totalPrescriptions);
+      }, 500);
     });
   </script>
 </body>

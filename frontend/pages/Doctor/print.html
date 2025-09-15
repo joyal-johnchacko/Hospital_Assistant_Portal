@@ -3,175 +3,582 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Prescription - ABC Hospital</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Medical Prescription</title>
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
-      background: #f5f5f5;
-      margin: 0;
+      font-family: 'Times New Roman', serif;
+      background: #ffffff;
+      color: #000000;
+      line-height: 1.4;
+      font-size: 12pt;
+    }
+
+    /* Page Setup for Print */
+    @page {
+      size: A4;
+      margin: 0.5in;
+    }
+
+    .prescription-page {
+      width: 8.27in;
+      height: 11.69in;
+      margin: 0 auto;
       padding: 20px;
-      font-family: "Georgia", serif;
+      background: white;
+      border: 3px solid #000;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
 
-    .prescription-document {
-      background: #fff;
-      max-width: 700px;
-      margin: auto;
-      padding: 40px;
-      border: 2px solid #333;
-      border-radius: 10px;
+    /* Header Section */
+    .header-section {
+      border-bottom: 3px double #000;
+      padding-bottom: 15px;
+      margin-bottom: 20px;
     }
 
-    .header {
+    .hospital-header {
       text-align: center;
-      border-bottom: 2px solid #333;
-      padding-bottom: 10px;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
     }
 
-    .header h1 {
-      margin: 0;
-      font-size: 28px;
-      color: #004f7c;
+    .hospital-name {
+      font-size: 24pt;
+      font-weight: bold;
+      color: #000;
+      margin-bottom: 5px;
+      letter-spacing: 1px;
     }
 
-    .header h2 {
-      margin: 5px 0 0;
-      font-size: 18px;
-      font-weight: normal;
-      color: #555;
+    .hospital-tagline {
+      font-size: 11pt;
+      font-style: italic;
+      color: #333;
+      margin-bottom: 8px;
     }
 
+    .hospital-details {
+      font-size: 10pt;
+      color: #000;
+      line-height: 1.3;
+    }
+
+    .rx-header {
+      text-align: center;
+      font-size: 18pt;
+      font-weight: bold;
+      color: #000;
+      margin: 10px 0;
+      text-decoration: underline;
+    }
+
+    /* Patient Info Section */
     .patient-info {
+      display: table;
+      width: 100%;
       margin-bottom: 20px;
-      font-size: 16px;
+      border: 2px solid #000;
+      border-collapse: collapse;
     }
 
-    .patient-info strong {
-      display: inline-block;
-      width: 120px;
+    .patient-row {
+      display: table-row;
+    }
+
+    .patient-label,
+    .patient-value {
+      display: table-cell;
+      padding: 8px 12px;
+      border: 1px solid #000;
+      vertical-align: middle;
+    }
+
+    .patient-label {
+      font-weight: bold;
+      background: #f0f0f0;
+      width: 150px;
+    }
+
+    .patient-value {
+      background: white;
+    }
+
+    /* Prescription Details */
+    .prescription-content {
+      flex-grow: 1;
     }
 
     .section-title {
-      font-size: 18px;
+      font-size: 14pt;
       font-weight: bold;
-      margin: 20px 0 10px;
-      border-bottom: 1px solid #ccc;
-      padding-bottom: 5px;
-      color: #222;
+      margin: 20px 0 10px 0;
+      text-transform: uppercase;
+      border-bottom: 2px solid #000;
+      padding-bottom: 3px;
     }
 
-    .medicines, .advice {
-      padding-left: 15px;
-      line-height: 1.6;
+    /* Diagnosis Box */
+    .diagnosis-box {
+      border: 2px solid #000;
+      padding: 12px;
+      margin-bottom: 20px;
+      min-height: 60px;
+      background: #fafafa;
     }
 
-    .footer {
-      margin-top: 40px;
-      text-align: right;
+    .diagnosis-label {
+      font-weight: bold;
+      font-size: 11pt;
+      margin-bottom: 5px;
+    }
+
+    .diagnosis-text {
+      font-size: 12pt;
+      line-height: 1.4;
+    }
+
+    /* Medications Table */
+    .medications-table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 2px solid #000;
+      margin-bottom: 20px;
+    }
+
+    .medications-table th {
+      background: #000;
+      color: white;
+      padding: 10px 8px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 11pt;
+      border: 1px solid #000;
+    }
+
+    .medications-table td {
+      border: 1px solid #000;
+      padding: 10px 8px;
+      vertical-align: top;
+      font-size: 11pt;
+    }
+
+    .med-serial {
+      text-align: center;
+      font-weight: bold;
+      width: 50px;
+    }
+
+    .med-name {
+      font-weight: bold;
+      font-size: 12pt;
+    }
+
+    .med-strength {
+      font-size: 10pt;
+      color: #444;
       font-style: italic;
     }
 
-    /* Print only the prescription */
+    .dosage-info {
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .duration-info {
+      text-align: center;
+      font-weight: bold;
+      color: #000;
+    }
+
+    /* Medical Advice Box */
+    .advice-box {
+      border: 2px solid #000;
+      padding: 12px;
+      margin-bottom: 20px;
+      min-height: 80px;
+      background: #fafafa;
+    }
+
+    .advice-label {
+      font-weight: bold;
+      font-size: 11pt;
+      margin-bottom: 5px;
+    }
+
+    .advice-text {
+      font-size: 11pt;
+      line-height: 1.5;
+    }
+
+    /* Footer Section */
+    .footer-section {
+      margin-top: auto;
+      border-top: 2px solid #000;
+      padding-top: 15px;
+    }
+
+    .footer-content {
+      display: table;
+      width: 100%;
+    }
+
+    .signature-section,
+    .date-section {
+      display: table-cell;
+      vertical-align: bottom;
+      width: 50%;
+      padding: 10px;
+    }
+
+    .signature-section {
+      text-align: left;
+    }
+
+    .date-section {
+      text-align: right;
+    }
+
+    .signature-line {
+      border-bottom: 2px solid #000;
+      width: 200px;
+      height: 50px;
+      margin-bottom: 5px;
+    }
+
+    .doctor-name {
+      font-weight: bold;
+      font-size: 12pt;
+    }
+
+    .doctor-reg {
+      font-size: 10pt;
+      color: #444;
+    }
+
+    .date-info {
+      font-size: 11pt;
+    }
+
+    .prescription-id {
+      font-size: 10pt;
+      font-weight: bold;
+      margin-top: 5px;
+    }
+
+    /* Important Notes */
+    .important-notes {
+      border: 2px solid #000;
+      padding: 10px;
+      margin: 15px 0;
+      background: #f9f9f9;
+    }
+
+    .notes-title {
+      font-weight: bold;
+      font-size: 11pt;
+      margin-bottom: 5px;
+      text-decoration: underline;
+    }
+
+    .notes-list {
+      font-size: 10pt;
+      line-height: 1.3;
+      margin: 0;
+      padding-left: 15px;
+    }
+
+    .notes-list li {
+      margin-bottom: 3px;
+    }
+
+    /* Print Optimization */
     @media print {
       body {
-        background: none;
+        margin: 0;
+        padding: 0;
       }
-      .prescription-document {
-        border: none;
-        box-shadow: none;
+      
+      .prescription-page {
+        margin: 0;
+        border: 3px solid #000;
+        page-break-after: avoid;
+      }
+
+      .no-print {
+        display: none !important;
+      }
+
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
       }
     }
-    * --- Prescription Print Table Styles --- */
-.medicines-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 15px 0 25px 0;
-  font-size: 15px;
-}
 
-.medicines-table th,
-.medicines-table td {
-  border: 1px solid #999;
-  padding: 10px 12px;
-  text-align: left;
-}
+    /* Screen View Styles */
+    @media screen {
+      body {
+        background: #e5e5e5;
+        padding: 20px;
+      }
+      
+      .prescription-page {
+        box-shadow: 0 0 20px rgba(0,0,0,0.3);
+        margin: 20px auto;
+      }
 
-.medicines-table th {
-  background-color: #f2f2f2;
-  font-weight: bold;
-  color: #333;
-}
+      .print-button {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #007bff;
+        color: white;
+        border: none;
+        padding: 15px 25px;
+        border-radius: 5px;
+        font-size: 14pt;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        z-index: 1000;
+      }
 
-.medicines-table td:first-child {
-  text-align: center;
-  width: 50px;
-  font-weight: bold;
-}
+      .print-button:hover {
+        background: #0056b3;
+      }
+
+      .close-button {
+        position: fixed;
+        top: 20px;
+        right: 180px;
+        background: #6c757d;
+        color: white;
+        border: none;
+        padding: 15px 25px;
+        border-radius: 5px;
+        font-size: 14pt;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        z-index: 1000;
+      }
+
+      .close-button:hover {
+        background: #545b62;
+      }
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+      font-style: italic;
+    }
   </style>
 </head>
-<body onload="window.print()">
-  <div class="prescription-document">
-    <div class="header">
-      <h1>🏥 ABC Hospital</h1>
-      <h2>Doctor’s Prescription</h2>
+<body onload="loadPrescription()">
+  <!-- Print Controls -->
+  <button class="print-button no-print" onclick="window.print()">🖨️ Print</button>
+  <button class="close-button no-print" onclick="window.close()">❌ Close</button>
+
+  <div class="prescription-page">
+    <!-- Header Section -->
+    <div class="header-section">
+      <div class="hospital-header">
+        <div class="hospital-name">🏥 ABC HOSPITAL</div>
+        <div class="hospital-tagline">Excellence in Healthcare Since 1995</div>
+        <div class="hospital-details">
+          123 Medical Center Drive, Health City, State 12345<br>
+          Phone: +1 (555) 123-CARE | Email: info@abchospital.com | Fax: +1 (555) 123-4567
+        </div>
+      </div>
+      <div class="rx-header">℞ PRESCRIPTION</div>
     </div>
 
+    <!-- Patient Information -->
     <div class="patient-info">
-  <p><strong>Patient:</strong> <span id="printPatient"></span></p>
-  <p><strong>Age:</strong> <span id="printAge"></span></p> <p><strong>Date:</strong> <span id="printDate"></span></p>
-  </div>
+      <div class="patient-row">
+        <div class="patient-label">Patient Name:</div>
+        <div class="patient-value" id="patientName">_____________________</div>
+        <div class="patient-label">Age/Sex:</div>
+        <div class="patient-value" id="ageGender">_____________________</div>
+      </div>
+      <div class="patient-row">
+        <div class="patient-label">Date:</div>
+        <div class="patient-value" id="prescriptionDate">_____________________</div>
+        <div class="patient-label">Patient ID:</div>
+        <div class="patient-value" id="patientId">_____________________</div>
+      </div>
+    </div>
 
-    <div class="section-title">Diagnosis</div>
-    <p id="printDiagnosis"></p>
+    <div class="prescription-content">
+      <!-- Diagnosis Section -->
+      <div class="section-title">Clinical Diagnosis</div>
+      <div class="diagnosis-box">
+        <div class="diagnosis-text" id="diagnosisText">_________________________________</div>
+      </div>
 
-    <div class="section-title">Medicines (Rx)</div>
+      <!-- Medications Section -->
+      <div class="section-title">℞ Prescribed Medications</div>
+      <table class="medications-table">
+        <thead>
+          <tr>
+            <th style="width: 50px;">S.No</th>
+            <th style="width: 300px;">Medicine Name & Strength</th>
+            <th style="width: 120px;">Dosage</th>
+            <th style="width: 100px;">Duration</th>
+          </tr>
+        </thead>
+        <tbody id="medicationsBody">
+          <!-- Medications will be populated here -->
+        </tbody>
+      </table>
 
-<table class="medicines-table">
-  <thead>
-    <tr>
-      <th>S.No.</th>
-      <th>Medicine Name</th>
-      <th>Dosage</th>
-      <th>Frequency</th>
-    </tr>
-  </thead>
-  <tbody id="printMedicines">
-    </tbody>
-</table>
+      <!-- Medical Advice Section -->
+      <div class="section-title">Medical Advice & Instructions</div>
+      <div class="advice-box">
+        <div class="advice-text" id="adviceText">_________________________________</div>
+      </div>
 
-    <div class="section-title">Advice</div>
-    <div class="advice" id="printAdvice"></div>
+      <!-- Important Notes -->
+      <div class="important-notes">
+        <div class="notes-title">⚠️ IMPORTANT NOTES:</div>
+        <ul class="notes-list">
+          <li>Take medicines exactly as prescribed</li>
+          <li>Complete the full course even if you feel better</li>
+          <li>Do not share medicines with others</li>
+          <li>Store in cool, dry place away from children</li>
+          <li>Contact doctor if severe side effects occur</li>
+        </ul>
+      </div>
+    </div>
 
-    <div class="footer">
-      <p>Doctor’s Signature: __________________</p>
+    <!-- Footer Section -->
+    <div class="footer-section">
+      <div class="footer-content">
+        <div class="signature-section">
+          <div class="signature-line"></div>
+          <div class="doctor-name" id="doctorName">Dr. _____________</div>
+          <div class="doctor-reg">Reg. No: MD12345</div>
+        </div>
+        <div class="date-section">
+          <div class="date-info">
+            <strong>Date:</strong> <span id="footerDate">__________</span><br>
+            <strong>Time:</strong> <span id="footerTime">__________</span>
+          </div>
+          <div class="prescription-id" id="prescriptionId">Rx ID: __________</div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <script src="script.js"></script>
   <script>
-    // Insert today's date
-    document.getElementById("printDate").innerText = new Date().toLocaleDateString();
-    if (window.location.pathname.endsWith("print.html")) {
-  const presc = JSON.parse(localStorage.getItem("prescription"));
-  if (presc) {
-    document.getElementById("printPatient").innerText = presc.patientName;
-    document.getElementById("printDiagnosis").innerText = presc.diagnosis;
-    document.getElementById("printAdvice").innerText = presc.advice;
+    function loadPrescription() {
+      const prescription = JSON.parse(localStorage.getItem("prescription"));
+      
+      if (!prescription) {
+        document.querySelector('.prescription-page').innerHTML = `
+          <div class="empty-state">
+            <h2>⚠️ No Prescription Data Found</h2>
+            <p>Please generate a prescription first from the appointment system.</p>
+            <button onclick="window.close()" style="margin-top: 20px; padding: 10px 20px; font-size: 12pt;">Close Window</button>
+          </div>
+        `;
+        return;
+      }
 
-    // Fill medicines table
-    const medTable = document.getElementById("printMedicines");
-    presc.medicines.forEach(med => {
-      let row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${med.name}</td>
-        <td>${med.dose}</td>
-        <td>${med.times}</td>
-      `;
-      medTable.appendChild(row);
+      // Generate IDs
+      const prescId = 'RX' + Date.now().toString().slice(-6);
+      const patId = 'PT' + Math.random().toString(36).substr(2, 6).toUpperCase();
+
+      // Get current date and time
+      const now = new Date();
+      const dateStr = now.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      });
+      const timeStr = now.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      });
+
+      // Populate patient information
+      document.getElementById("patientName").textContent = prescription.patientName || "Not Specified";
+      document.getElementById("ageGender").textContent = 
+        (prescription.patientAge ? prescription.patientAge + " years" : "-- years") + 
+        " / " + (prescription.gender || "Not specified");
+      document.getElementById("prescriptionDate").textContent = dateStr;
+      document.getElementById("patientId").textContent = patId;
+
+      // Populate diagnosis
+      document.getElementById("diagnosisText").textContent = 
+        prescription.diagnosis || "General consultation and treatment";
+
+      // Populate medications
+      const medicationsBody = document.getElementById("medicationsBody");
+      medicationsBody.innerHTML = "";
+
+      if (prescription.medicines && prescription.medicines.length > 0) {
+        prescription.medicines.forEach((medicine, index) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td class="med-serial">${index + 1}</td>
+            <td>
+              <div class="med-name">${medicine.name}</div>
+              <div class="med-strength">${medicine.dose}</div>
+            </td>
+            <td class="dosage-info">${medicine.times}/day</td>
+            <td class="duration-info">${medicine.days || '7'} days</td>
+          `;
+          medicationsBody.appendChild(row);
+        });
+      } else {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td colspan="4" style="text-align: center; padding: 20px; font-style: italic; color: #666;">
+            No medications prescribed
+          </td>
+        `;
+        medicationsBody.appendChild(row);
+      }
+
+      // Populate advice
+      document.getElementById("adviceText").textContent = 
+        prescription.advice || "Follow general health guidelines and return for follow-up as needed.";
+
+      // Populate doctor information
+      document.getElementById("doctorName").textContent = 
+        prescription.doctorName ? `Dr. ${prescription.doctorName}` : "Dr. Smith";
+
+      // Populate footer date/time
+      document.getElementById("footerDate").textContent = dateStr;
+      document.getElementById("footerTime").textContent = timeStr;
+      document.getElementById("prescriptionId").textContent = `Rx ID: ${prescId}`;
+
+      // Auto-print after load (optional)
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('autoprint') === 'true') {
+        setTimeout(() => window.print(), 500);
+      }
+    }
+
+    // Print event handlers
+    window.addEventListener('beforeprint', function() {
+      document.title = `Prescription - ${document.getElementById("patientName").textContent}`;
     });
-  }
-}
+
+    window.addEventListener('afterprint', function() {
+      console.log('Prescription printed successfully');
+    });
   </script>
 </body>
 </html>

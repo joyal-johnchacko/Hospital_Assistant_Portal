@@ -3,143 +3,544 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - View Patients</title>
+    <title>Patients Management - Healthcare System</title>
+    <meta name="description" content="View and manage all patients in the healthcare system">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* General body and container */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f6f8;
+        :root {
+            --primary-color: #2563eb;
+            --primary-hover: #1d4ed8;
+            --secondary-color: #64748b;
+            --secondary-hover: #475569;
+            --success-color: #059669;
+            --success-hover: #047857;
+            --danger-color: #dc2626;
+            --danger-hover: #b91c1c;
+            --warning-color: #d97706;
+            --info-color: #0891b2;
+            --background-color: #0f172a;
+            --surface-color: #1e293b;
+            --surface-hover: #334155;
+            --border-color: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+        }
+
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
 
-        .container {
-            max-width: 800px;
-            margin: 50px auto;
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--background-color);
+            color: var(--text-primary);
+            line-height: 1.6;
         }
 
-        h2 {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #333;
+        .dashboard-container {
+            min-height: 100vh;
+            padding: 2rem;
         }
 
-        table {
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+
+        .breadcrumb a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--primary-hover);
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .search-container {
+            position: relative;
+            flex: 1;
+            max-width: 400px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--surface-color);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--surface-hover);
+            color: var(--text-primary);
+        }
+
+        /* Table Container */
+        .table-container {
+            background: var(--surface-color);
+            border-radius: 1rem;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
         }
 
-        table, th, td {
-            border: 1px solid #ccc;
-        }
-
-        th, td {
-            padding: 10px;
+        .table th {
+            background: var(--surface-color);
+            padding: 1rem;
             text-align: left;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+            border-bottom: 1px solid var(--border-color);
         }
 
-        th {
-            background-color: #f2f2f2;
-            color: #333;
+        .table th:first-child {
+            padding-left: 1.5rem;
         }
 
-        tr:nth-child(even) {
-            background-color: #fafafa;
+        .table th:last-child {
+            padding-right: 1.5rem;
+        }
+
+        .table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .table td:first-child {
+            padding-left: 1.5rem;
+        }
+
+        .table td:last-child {
+            padding-right: 1.5rem;
+        }
+
+        .table tbody tr {
+            transition: background-color 0.2s;
+        }
+
+        .table tbody tr:hover {
+            background: var(--surface-hover);
+        }
+
+        .table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Patient Avatar */
+        .patient-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .patient-avatar {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .patient-details h4 {
+            font-weight: 500;
+            margin-bottom: 0.125rem;
+        }
+
+        .patient-id {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* Status Badge */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.375rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+
+        .status-active {
+            background: rgba(5, 150, 105, 0.1);
+            color: var(--success-color);
+            border: 1px solid rgba(5, 150, 105, 0.2);
+        }
+
+        .status-inactive {
+            background: rgba(156, 163, 175, 0.1);
+            color: var(--text-muted);
+            border: 1px solid rgba(156, 163, 175, 0.2);
+        }
+
+        .status-dot {
+            width: 0.375rem;
+            height: 0.375rem;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        /* Action Buttons */
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 0.375rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-right: 0.5rem;
+        }
+
+        .action-btn:last-child {
+            margin-right: 0;
+        }
+
+        .edit-btn {
+            background: rgba(8, 145, 178, 0.1);
+            color: var(--info-color);
+            border: 1px solid rgba(8, 145, 178, 0.2);
+        }
+
+        .edit-btn:hover {
+            background: rgba(8, 145, 178, 0.2);
+            transform: translateY(-1px);
         }
 
         .delete-btn {
-            padding: 5px 10px;
-            color: white;
-            background-color: red;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
+            background: rgba(220, 38, 38, 0.1);
+            color: var(--danger-color);
+            border: 1px solid rgba(220, 38, 38, 0.2);
         }
 
         .delete-btn:hover {
-            background-color: darkred;
-        }
-        .back-btn {
-            padding: 5px 15px;
-            background-color: red;
-            color: #fff;
-            border: none;
-            border-radius: 20px;
-            margin-top: 15px;
-            margin-left: 82%;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
+            background: rgba(220, 38, 38, 0.2);
+            transform: translateY(-1px);
         }
 
-        .back-btn:hover {
-            background-color: rgb(179, 39, 39);
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--text-muted);
+        }
+
+        .empty-state h3 {
+            font-size: 1.125rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard-container {
+                padding: 1rem;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-container {
+                max-width: none;
+            }
+
+            .action-buttons {
+                justify-content: center;
+            }
+
+            .table-container {
+                overflow-x: auto;
+            }
+
+            .table {
+                min-width: 600px;
+            }
         }
     </style>
 </head>
 <body>
-    <a href="users.html">
-  <button class="back-btn">⬅ Back to Admin</button>
-    </a>
-    <div class="container">
-        <h2>All Registered Patients</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Full Name</th>
-                    <th>Password</th>
-                    <th>Age</th>
-                    <th>Phone</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody id="patientTable"></tbody>
-        </table>
+    <div class="dashboard-container">
+        <!-- Breadcrumb -->
+        <nav class="breadcrumb">
+            <a href="admin-dashboard.html">Admin Dashboard</a>
+            <span>/</span>
+            <a href="users.html">User Management</a>
+            <span>/</span>
+            <span>Patients List</span>
+        </nav>
+
+        <!-- Header -->
+        <div class="header">
+            <div>
+                <h1 class="page-title">Patients Management</h1>
+                <p class="page-subtitle">View, edit, and manage all patients in your healthcare system</p>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-input" placeholder="Search patients by name, ID, or phone..." id="searchInput">
+            </div>
+            <div class="action-buttons">
+                <a href="users.html" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Users
+                </a>
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th><i class="fas fa-user"></i> Patient</th>
+                        <th><i class="fas fa-birthday-cake"></i> Age</th>
+                        <th><i class="fas fa-phone"></i> Phone</th>
+                        <th><i class="fas fa-envelope"></i> Email</th>
+                        <th><i class="fas fa-circle"></i> Status</th>
+                        <th><i class="fas fa-cog"></i> Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="patientTable"></tbody>
+            </table>
+        </div>
     </div>
 
     <script>
         const patientTable = document.getElementById("patientTable");
+        const searchInput = document.getElementById("searchInput");
 
         // Fetch patients from localStorage
         let patients = JSON.parse(localStorage.getItem("patients")) || [];
+        let filteredPatients = [...patients];
+
+        // Function to generate initials from name
+        function getInitials(fullName) {
+            return fullName.split(' ').map(name => name).join('').substring(0, 2).toUpperCase();
+        }
+
+        // Function to generate patient ID
+        function generatePatientId(index) {
+            return `PT${String(index + 1000).padStart(6, '0')}`;
+        }
 
         // Function to render the table
         function renderPatients() {
-            patientTable.innerHTML = ""; // clear existing rows
+            patientTable.innerHTML = "";
 
-            if (patients.length === 0) {
+            if (filteredPatients.length === 0) {
                 const row = document.createElement("tr");
-                row.innerHTML = `<td colspan="5" style="text-align:center;">No patients found.</td>`;
+                row.innerHTML = `
+                    <td colspan="6" class="empty-state">
+                        <i class="fas fa-user-friends"></i>
+                        <h3>No patients found</h3>
+                        <p>${patients.length === 0 ? 'Get started by adding your first patient.' : 'Try adjusting your search terms.'}</p>
+                    </td>
+                `;
                 patientTable.appendChild(row);
                 return;
             }
 
-            patients.forEach((patient, index) => {
+            filteredPatients.forEach((patient, index) => {
+                const originalIndex = patients.indexOf(patient);
+                const initials = getInitials(patient.fullName);
+                const patientId = generatePatientId(originalIndex);
+                const status = patient.status || 'active';
+                
                 const row = document.createElement("tr");
                 row.innerHTML = `
-                    <td>${patient.fullName}</td>
-                    <td>****</td>
+                    <td>
+                        <div class="patient-info">
+                            <div class="patient-avatar">${initials}</div>
+                            <div class="patient-details">
+                                <h4>${patient.fullName}</h4>
+                                <div class="patient-id">${patientId}</div>
+                            </div>
+                        </div>
+                    </td>
                     <td>${patient.age}</td>
                     <td>${patient.phone}</td>
-                    <td><button class="delete-btn" onclick="deletePatient(${index})">Delete</button></td>
+                    <td>${patient.email || 'Not provided'}</td>
+                    <td>
+                        <span class="status-badge status-${status}">
+                            <span class="status-dot"></span>
+                            ${status}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="action-btn edit-btn" onclick="editPatient(${originalIndex})" title="Edit Patient">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="action-btn delete-btn" onclick="deletePatient(${originalIndex})" title="Delete Patient">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
                 `;
                 patientTable.appendChild(row);
             });
         }
 
-        // Delete patient
+        // Search functionality
+        function filterPatients() {
+            const searchTerm = searchInput.value.toLowerCase();
+            filteredPatients = patients.filter(patient => 
+                patient.fullName.toLowerCase().includes(searchTerm) ||
+                patient.phone.includes(searchTerm) ||
+                (patient.email && patient.email.toLowerCase().includes(searchTerm))
+            );
+            renderPatients();
+        }
+
+        // Edit patient function
+        function editPatient(index) {
+            // Redirect to edit page with patient index
+            window.location.href = `edit-patient.html?id=${index}`;
+        }
+
+        // Delete patient function
         function deletePatient(index) {
-            if (confirm("Are you sure you want to delete this patient?")) {
+            const patient = patients[index];
+            if (confirm(`Are you sure you want to delete ${patient.fullName}? This action cannot be undone.`)) {
                 patients.splice(index, 1);
                 localStorage.setItem("patients", JSON.stringify(patients));
+                filteredPatients = [...patients];
                 renderPatients();
+                
+                // Show success message (you can enhance this with a toast notification)
+                alert(`${patient.fullName} has been successfully deleted.`);
             }
         }
+
+        // Event listeners
+        searchInput.addEventListener('input', filterPatients);
 
         // Initial render
         renderPatients();

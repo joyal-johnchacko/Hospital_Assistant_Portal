@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receptionists Management - Healthcare System</title>
+    <meta name="description" content="View and manage all receptionists in the healthcare system">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-hover: #1d4ed8;
+            --secondary-color: #64748b;
+            --secondary-hover: #475569;
+            --success-color: #059669;
+            --success-hover: #047857;
+            --danger-color: #dc2626;
+            --danger-hover: #b91c1c;
+            --warning-color: #d97706;
+            --info-color: #0891b2;
+            --background-color: #0f172a;
+            --surface-color: #1e293b;
+            --surface-hover: #334155;
+            --border-color: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--background-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .dashboard-container {
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        /* Header */
+        .header {
+            margin-bottom: 2rem;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+
+        .breadcrumb a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--primary-hover);
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stat-card-title {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .stat-card-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .stat-card-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card-change {
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .stat-positive {
+            color: var(--success-color);
+        }
+
+        .stat-negative {
+            color: var(--danger-color);
+        }
+
+        .icon-primary {
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--primary-color);
+        }
+
+        .icon-success {
+            background: rgba(5, 150, 105, 0.1);
+            color: var(--success-color);
+        }
+
+        .icon-warning {
+            background: rgba(217, 119, 6, 0.1);
+            color: var(--warning-color);
+        }
+
+        .icon-info {
+            background: rgba(8, 145, 178, 0.1);
+            color: var(--info-color);
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .search-filter-group {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .search-container {
+            position: relative;
+            min-width: 300px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .filter-select {
+            padding: 0.75rem 1rem;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            min-width: 150px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--surface-color);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--surface-hover);
+            color: var(--text-primary);
+        }
+
+        /* Table Container */
+        .table-container {
+            background: var(--surface-color);
+            border-radius: 1rem;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th {
+            background: var(--surface-color);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .table th:first-child {
+            padding-left: 1.5rem;
+        }
+
+        .table th:last-child {
+            padding-right: 1.5rem;
+        }
+
+        .table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .table td:first-child {
+            padding-left: 1.5rem;
+        }
+
+        .table td:last-child {
+            padding-right: 1.5rem;
+        }
+
+        .table tbody tr {
+            transition: background-color 0.2s;
+        }
+
+        .table tbody tr:hover {
+            background: var(--surface-hover);
+        }
+
+        .table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Staff Info */
+        .staff-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .staff-avatar {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .staff-details h4 {
+            font-weight: 500;
+            margin-bottom: 0.125rem;
+        }
+
+        .staff-id {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* Department Badge */
+        .department-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.375rem 0.75rem;
+            border-radius: 0.375rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+
+        .dept-front-desk {
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--primary-color);
+            border: 1px solid rgba(37, 99, 235, 0.2);
+        }
+
+        .dept-reception {
+            background: rgba(8, 145, 178, 0.1);
+            color: var(--info-color);
+            border: 1px solid rgba(8, 145, 178, 0.2);
+        }
+
+        .dept-admin {
+            background: rgba(217, 119, 6, 0.1);
+            color: var(--warning-color);
+            border: 1px solid rgba(217, 119, 6, 0.2);
+        }
+
+        /* Status Badge */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.375rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+
+        .status-active {
+            background: rgba(5, 150, 105, 0.1);
+            color: var(--success-color);
+            border: 1px solid rgba(5, 150, 105, 0.2);
+        }
+
+        .status-inactive {
+            background: rgba(156, 163, 175, 0.1);
+            color: var(--text-muted);
+            border: 1px solid rgba(156, 163, 175, 0.2);
+        }
+
+        .status-on-leave {
+            background: rgba(217, 119, 6, 0.1);
+            color: var(--warning-color);
+            border: 1px solid rgba(217, 119, 6, 0.2);
+        }
+
+        .status-dot {
+            width: 0.375rem;
+            height: 0.375rem;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        /* Shift Badge */
+        .shift-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            background: var(--surface-hover);
+            color: var(--text-secondary);
+        }
+
+        /* Action Buttons */
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 0.375rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-right: 0.5rem;
+        }
+
+        .action-btn:last-child {
+            margin-right: 0;
+        }
+
+        .edit-btn {
+            background: rgba(8, 145, 178, 0.1);
+            color: var(--info-color);
+            border: 1px solid rgba(8, 145, 178, 0.2);
+        }
+
+        .edit-btn:hover {
+            background: rgba(8, 145, 178, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .view-btn {
+            background: rgba(5, 150, 105, 0.1);
+            color: var(--success-color);
+            border: 1px solid rgba(5, 150, 105, 0.2);
+        }
+
+        .view-btn:hover {
+            background: rgba(5, 150, 105, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .delete-btn {
+            background: rgba(220, 38, 38, 0.1);
+            color: var(--danger-color);
+            border: 1px solid rgba(220, 38, 38, 0.2);
+        }
+
+        .delete-btn:hover {
+            background: rgba(220, 38, 38, 0.2);
+            transform: translateY(-1px);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--text-muted);
+        }
+
+        .empty-state h3 {
+            font-size: 1.125rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard-container {
+                padding: 1rem;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-filter-group {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .search-container {
+                min-width: auto;
+                flex: 1;
+            }
+
+            .action-buttons {
+                justify-content: center;
+            }
+
+            .table-container {
+                overflow-x: auto;
+            }
+
+            .table {
+                min-width: 800px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Breadcrumb -->
+        <nav class="breadcrumb">
+            <a href="admin-dashboard.html">Admin Dashboard</a>
+            <span>/</span>
+            <a href="users.html">User Management</a>
+            <span>/</span>
+            <span>Receptionists List</span>
+        </nav>
+
+        <!-- Header -->
+        <div class="header">
+            <h1 class="page-title">Receptionists Management</h1>
+            <p class="page-subtitle">View, edit, and manage all reception staff in your healthcare system</p>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-card-title">Total Receptionists</span>
+                    <div class="stat-card-icon icon-primary">
+                        <i class="fas fa-users"></i>
+                    </div>
+                </div>
+                <div class="stat-card-value" id="totalReceptionists">0</div>
+                <div class="stat-card-change">
+                    <span>All registered reception staff</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-card-title">Active Staff</span>
+                    <div class="stat-card-icon icon-success">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                </div>
+                <div class="stat-card-value" id="activeReceptionists">0</div>
+                <div class="stat-card-change stat-positive">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>Currently on duty</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-card-title">On Leave</span>
+                    <div class="stat-card-icon icon-warning">
+                        <i class="fas fa-calendar-times"></i>
+                    </div>
+                </div>
+                <div class="stat-card-value" id="onLeaveReceptionists">0</div>
+                <div class="stat-card-change">
+                    <span>Staff on leave today</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <div class="search-filter-group">
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" placeholder="Search receptionists by name, ID, or department..." id="searchInput">
+                </div>
+                <select class="filter-select" id="departmentFilter">
+                    <option value="">All Departments</option>
+                    <option value="front-desk">Front Desk</option>
+                    <option value="reception">Reception</option>
+                    <option value="admin">Administration</option>
+                </select>
+                <select class="filter-select" id="statusFilter">
+                    <option value="">All Status</option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                    <option value="on-leave">On Leave</option>
+                </select>
+            </div>
+            <div class="action-buttons">
+                <a href="addreceptionist.html" class="btn btn-primary">
+                    <i class="fas fa-plus"></i>
+                    Add Receptionist
+                </a>
+                <a href="users.html" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Users
+                </a>
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th><i class="fas fa-user"></i> Receptionist</th>
+                        <th><i class="fas fa-building"></i> Department</th>
+                        <th><i class="fas fa-phone"></i> Phone</th>
+                        <th><i class="fas fa-envelope"></i> Email</th>
+                        <th><i class="fas fa-clock"></i> Shift</th>
+                        <th><i class="fas fa-calendar"></i> Experience</th>
+                        <th><i class="fas fa-circle"></i> Status</th>
+                        <th><i class="fas fa-cog"></i> Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="receptionistTable"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const receptionistTable = document.getElementById("receptionistTable");
+        const searchInput = document.getElementById("searchInput");
+        const departmentFilter = document.getElementById("departmentFilter");
+        const statusFilter = document.getElementById("statusFilter");
+
+        // Sample receptionist data - replace with data from your backend/localStorage
+        let receptionists = JSON.parse(localStorage.getItem('receptionists')) || [];
+
+        // Use a copy for filtering
+        let filteredReceptionists = [...receptionists];
+
+        // Function to generate initials from name
+        function getInitials(firstName, lastName) {
+            return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
+        }
+
+        // Function to generate staff ID
+        function generateStaffId(id) {
+            return `RC${String(id + 1000).padStart(4, '0')}`;
+        }
+
+        // Function to get department display name and class
+        function getDepartmentInfo(dept) {
+            const deptMap = {
+                'front-desk': { name: 'Front Desk', class: 'dept-front-desk' },
+                'reception': { name: 'Reception', class: 'dept-reception' },
+                'admin': { name: 'Administration', class: 'dept-admin' }
+            };
+            return deptMap[dept] || { name: dept, class: 'dept-front-desk' };
+        }
+
+        // Function to update statistics
+        function updateStats() {
+            const total = receptionists.length;
+            const active = receptionists.filter(r => r.status === 'active').length;
+            const onLeave = receptionists.filter(r => r.status === 'on-leave').length;
+
+            document.getElementById('totalReceptionists').textContent = total;
+            document.getElementById('activeReceptionists').textContent = active;
+            document.getElementById('onLeaveReceptionists').textContent = onLeave;
+        }
+
+
+        // Function to render the table
+        function renderReceptionists() {
+            receptionistTable.innerHTML = "";
+
+            if (filteredReceptionists.length === 0) {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td colspan="8" class="empty-state">
+                        <i class="fas fa-user-tie"></i>
+                        <h3>No receptionists found</h3>
+                        <p>${receptionists.length === 0 ? 'Get started by adding your first receptionist.' : 'Try adjusting your search or filter criteria.'}</p>
+                    </td>
+                `;
+                receptionistTable.appendChild(row);
+                return;
+            }
+
+            filteredReceptionists.forEach((receptionist) => {
+                const initials = getInitials(receptionist.firstName, receptionist.lastName);
+                const staffId = receptionist.employeeId || receptionist.id;
+                const deptInfo = getDepartmentInfo(receptionist.department);
+                
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>
+                        <div class="staff-info">
+                            <div class="staff-avatar">${initials}</div>
+                            <div class="staff-details">
+                                <h4>${receptionist.firstName} ${receptionist.lastName}</h4>
+                                <div class="staff-id">${staffId}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="department-badge ${deptInfo.class}">
+                            ${deptInfo.name}
+                        </span>
+                    </td>
+                    <td>${receptionist.phone}</td>
+                    <td>${receptionist.email}</td>
+                    <td>
+                        <span class="shift-badge">
+                            ${receptionist.shift}
+                        </span>
+                    </td>
+                    <td>${receptionist.experience} years</td>
+                    <td>
+                        <span class="status-badge status-${receptionist.status}">
+                            <span class="status-dot"></span>
+                            ${receptionist.status.replace('-', ' ')}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="action-btn view-btn" onclick="viewReceptionist(${receptionist.id})" title="View Details">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="action-btn edit-btn" onclick="editReceptionist(${receptionist.id})" title="Edit Receptionist">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="action-btn delete-btn" onclick="deleteReceptionist(${receptionist.id})" title="Delete Receptionist">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                receptionistTable.appendChild(row);
+            });
+        }
+
+        // Filter functions
+        function filterReceptionists() {
+    const searchTerm = searchInput.value.trim().toLowerCase();
+    const deptFilterVal = departmentFilter.value;
+    const statusFilterVal = statusFilter.value;
+
+    filteredReceptionists = receptionists.filter(receptionist => {
+        const fullName = `${receptionist.firstName} ${receptionist.lastName}`.toLowerCase();
+        const phone = receptionist.phone.replace(/[^0-9]/g, ""); // digits only
+        const email = receptionist.email.toLowerCase();
+        const staffId = (receptionist.employeeId || receptionist.id).toString().toLowerCase();
+
+
+        // normalize search term for phone numbers
+        const searchDigits = searchTerm.replace(/[^0-9]/g, "");
+
+        const matchesSearch =
+            !searchTerm || // empty search = show all
+            fullName.includes(searchTerm) ||
+            email.includes(searchTerm) ||
+            staffId.includes(searchTerm) ||
+            (searchDigits && phone.includes(searchDigits));
+
+        const matchesDept = !deptFilterVal || receptionist.department === deptFilterVal;
+        const matchesStatus = !statusFilterVal || receptionist.status === statusFilterVal;
+
+        return matchesSearch && matchesDept && matchesStatus;
+    });
+
+    renderReceptionists();
+}
+
+
+        // Action functions
+        function viewReceptionist(id) {
+            const receptionist = receptionists.find(r => r.id === id);
+            if (receptionist) {
+                alert(`Viewing details for ${receptionist.firstName} ${receptionist.lastName}
+                Department: ${getDepartmentInfo(receptionist.department).name}
+                Shift: ${receptionist.shift}
+                Join Date: ${receptionist.startDate || "N/A"}
+                Status: ${receptionist.status}`);
+
+            }
+        }
+
+        function editReceptionist(id) {
+            // Redirect to edit page with receptionist ID
+            window.location.href = `edit-receptionist.html?id=${id}`;
+        }
+
+        function deleteReceptionist(id) {
+            const receptionist = receptionists.find(r => r.id === id);
+            if (receptionist && confirm(`Are you sure you want to delete ${receptionist.firstName} ${receptionist.lastName}? This action cannot be undone.`)) {
+                receptionists = receptionists.filter(r => r.id !== id);
+                filteredReceptionists = [...receptionists];
+                localStorage.setItem('receptionists', JSON.stringify(receptionists)); // ✅ persist
+                updateStats();
+                renderReceptionists();
+                alert(`${receptionist.firstName} ${receptionist.lastName} has been successfully deleted.`);
+            }
+        }
+
+        // Event listeners
+        searchInput.addEventListener('input', filterReceptionists);
+        departmentFilter.addEventListener('change', filterReceptionists);
+        statusFilter.addEventListener('change', filterReceptionists);
+
+        // Initial render
+        updateStats();
+        renderReceptionists();
+    </script>
+</body>
+</html>

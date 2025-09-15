@@ -4,30 +4,382 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Patient Dashboard</title>
-  <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+      color: #e2e8f0;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 3rem;
+      padding: 2rem 0;
+    }
+
+    header i {
+      font-size: 3rem;
+      color: #60a5fa;
+      margin-right: 1rem;
+    }
+
+    header {
+      font-size: 3rem;
+      font-weight: 700;
+      color: #60a5fa;
+      letter-spacing: -0.02em;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .card {
+      background: rgba(30, 41, 59, 0.8);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(148, 163, 184, 0.1);
+      border-radius: 1rem;
+      padding: 2rem;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #8b5cf6, #3b82f6, #10b981);
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      border-color: rgba(148, 163, 184, 0.2);
+    }
+
+    .link-card {
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    .card h2 {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #f1f5f9;
+      margin-bottom: 1rem;
+    }
+
+    .card h2 i {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: white;
+      margin-right: 1rem;
+    }
+
+    .card:nth-child(1) h2 i {
+      background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    }
+
+    .card:nth-child(2) h2 i {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+    }
+
+    .card:nth-child(3) h2 i {
+      background: linear-gradient(135deg, #06b6d4, #0891b2);
+    }
+
+    .card p {
+      color: #94a3b8;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+      font-size: 1rem;
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      width: 100%;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+    }
+
+    .card:nth-child(1) .btn {
+      background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+      color: white;
+    }
+
+    .card:nth-child(1) .btn:hover {
+      background: linear-gradient(135deg, #7c3aed, #6d28d9);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(139, 92, 246, 0.3);
+    }
+
+    .card:nth-child(2) .btn {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: white;
+    }
+
+    .card:nth-child(2) .btn:hover {
+      background: linear-gradient(135deg, #dc2626, #b91c1c);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(239, 68, 68, 0.3);
+    }
+
+    .card:nth-child(3) .btn {
+      background: linear-gradient(135deg, #06b6d4, #0891b2);
+      color: white;
+    }
+
+    .card:nth-child(3) .btn:hover {
+      background: linear-gradient(135deg, #0891b2, #0e7490);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(6, 182, 212, 0.3);
+    }
+
+    .back-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      background: rgba(71, 85, 105, 0.8);
+      backdrop-filter: blur(10px);
+      color: #e2e8f0;
+      padding: 1rem 2rem;
+      border-radius: 0.75rem;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(148, 163, 184, 0.1);
+      margin: 0 auto;
+      width: fit-content;
+    }
+
+    .back-btn:hover {
+      background: rgba(71, 85, 105, 1);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    @media (max-width: 768px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+      
+      header {
+        font-size: 2rem;
+      }
+      
+      body {
+        padding: 1rem;
+      }
+    }
+
+    .floating-elements {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .floating-elements::before {
+      content: '';
+      position: absolute;
+      top: 20%;
+      left: 10%;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
+      border-radius: 50%;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .floating-elements::after {
+      content: '';
+      position: absolute;
+      bottom: 20%;
+      right: 10%;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(6, 182, 212, 0.1) 0%, transparent 70%);
+      border-radius: 50%;
+      animation: float 8s ease-in-out infinite reverse;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) scale(1); }
+      50% { transform: translateY(-20px) scale(1.05); }
+    }
+    .card-content {
+      flex: 1; /* takes remaining space so button stays aligned */
+    }
+  </style>
 </head>
 <body>
+  <div class="floating-elements"></div>
+  
   <header>
     <i class="fa-solid fa-hospital"></i> Patient Dashboard
   </header>
 
   <div class="container grid">
     <a href="create.html" class="card link-card">
-      <h2><i class="fa-solid fa-calendar-check"></i> Appointments</h2>
-      <p> Book your appointments.</p>
+      <h2>
+        <div style="display: flex; align-items: center;">
+          <i class="fa-solid fa-calendar-check"></i>
+          <span>Appointments</span>
+        </div>
+      </h2>
+      <p>Schedule and manage your medical appointments with healthcare providers. View upcoming appointments and book new consultations.</p>
+      <div class="btn">
+        <i class="fa-solid fa-eye"></i>
+        Book Appointments
+      </div>
     </a>
 
     <a href="prescriptions.html" class="card link-card">
-      <h2><i class="fa-solid fa-pills"></i> Prescriptions</h2>
-      <p>Check your prescribed medicines and dosages.</p>
-    </a>
+  <div class="card-content">
+    <h2>
+      <div style="display: flex; align-items: center;">
+        <i class="fa-solid fa-pills"></i>
+        <span>Prescriptions</span>
+      </div>
+    </h2>
+    <p>Access your prescribed medications, dosages, and treatment plans. View medication history and refill requests.</p>
+  </div>
+  <div class="btn">
+    <i class="fa-solid fa-list"></i>
+    View Prescriptions
+  </div>
+  </a>
 
 
     <a href="contact.html" class="card link-card">
-      <h2><i class="fa-solid fa-phone"></i> Contact</h2>
-      <p>Get receptionist phone number for support.</p>
+      <h2>
+        <div style="display: flex; align-items: center;">
+          <i class="fa-solid fa-phone"></i>
+          <span>Contact</span>
+        </div>
+      </h2>
+      <p>Get in touch with our healthcare support team. Access receptionist contact information and emergency support services.</p>
+      <div class="btn">
+        <i class="fa-solid fa-address-book"></i>
+        Contact Support
+      </div>
     </a>
   </div>
+
+  <a href="../Login/loginpage.html" class="back-btn">
+    <i class="fa-solid fa-arrow-left"></i>
+    Back to login
+  </a>
+
+  <script>
+    // Add smooth interactions
+    document.querySelectorAll('.card').forEach(card => {
+      card.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-8px) scale(1.02)';
+      });
+      
+      card.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0) scale(1)';
+      });
+    });
+
+    // Add click ripple effect
+    document.querySelectorAll('.btn, .card').forEach(element => {
+      element.addEventListener('click', function(e) {
+        const ripple = document.createElement('span');
+        const rect = this.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        const x = e.clientX - rect.left - size / 2;
+        const y = e.clientY - rect.top - size / 2;
+        
+        ripple.style.cssText = `
+          position: absolute;
+          border-radius: 50%;
+          background: rgba(255, 255, 255, 0.3);
+          transform: scale(0);
+          animation: ripple 0.6s linear;
+          width: ${size}px;
+          height: ${size}px;
+          left: ${x}px;
+          top: ${y}px;
+          pointer-events: none;
+        `;
+        
+        this.style.position = 'relative';
+        this.style.overflow = 'hidden';
+        this.appendChild(ripple);
+        
+        setTimeout(() => {
+          ripple.remove();
+        }, 600);
+      });
+    });
+
+    // Add CSS animation for ripple effect
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes ripple {
+        to {
+          transform: scale(4);
+          opacity: 0;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+  </script>
 </body>
 </html>

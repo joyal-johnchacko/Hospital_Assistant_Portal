@@ -12,41 +12,108 @@
   <nav class="navbar">
     <div class="logo">🏥 ABC Hospital</div>
     <ul class="nav-links">
-      <li><a href="dashboard.html" class="btn-back">← Back</a></li>
+      <li><a href="dashboard.html" class="btn-back">← Back to Admin Dashboard</a></li>
     </ul>
   </nav>
 
   <main class="container">
-    <form id="appointmentForm">
-      <h2>Create Appointment</h2>
-
-      <div class="input-group">
-        <span class="icon"><i class="fa fa-user"></i></span>
-        <input type="text" name="patientName" placeholder="Enter patient name" required>
+    <div class="appointment-card">
+      <div class="card-header">
+        <h2><i class="fas fa-calendar-plus"></i> Create Appointment</h2>
+        <p>Schedule a new appointment for patient consultation</p>
       </div>
 
-      <div class="input-group">
-        <span class="icon"><i class="fa fa-cake-candles"></i></span>
-        <input type="number" name="patientAge" placeholder="Enter patient's age" min="0" required>
-      </div>
+      <form id="appointmentForm">
+        <div class="form-grid">
+          <div class="input-group">
+            <label for="patientName">Patient Name</label>
+            <div class="input-wrapper">
+              <span class="icon"><i class="fa fa-user"></i></span>
+              <input type="text" id="patientName" name="patientName" placeholder="Enter patient name" required>
+            </div>
+          </div>
 
-      <div class="input-group">
-        <span class="icon"><i class="fa fa-clock"></i></span>
-        <input type="time" name="appointmentTime" required>
-      </div>
+          <div class="input-group">
+            <label for="patientAge">Patient Age</label>
+            <div class="input-wrapper">
+              <span class="icon"><i class="fa fa-cake-candles"></i></span>
+              <input type="number" id="patientAge" name="patientAge" placeholder="Enter patient's age" min="0" max="120" required>
+            </div>
+          </div>
 
-      <div class="input-group">
-        <span class="icon"><i class="fa fa-notes-medical"></i></span>
-        <input type="text" name="reason" placeholder="Enter reason for visit" required>
-      </div>
+          <div class="input-group">
+            <label for="appointmentDate">Appointment Date</label>
+            <div class="input-wrapper">
+              <span class="icon"><i class="fa fa-calendar"></i></span>
+              <input type="date" id="appointmentDate" name="appointmentDate" required>
+            </div>
+          </div>
 
-      <button type="submit">Save Appointment</button>
-    </form>
+          <div class="input-group">
+            <label for="appointmentTime">Appointment Time</label>
+            <div class="input-wrapper">
+              <span class="icon"><i class="fa fa-clock"></i></span>
+              <select id="appointmentTime" name="appointmentTime" required>
+                <option value="">Select time slot</option>
+                <option value="09:00">09:00 AM</option>
+                <option value="09:15">09:15 AM</option>
+                <option value="09:30">09:30 AM</option>
+                <option value="09:45">09:45 AM</option>
+                <option value="10:00">10:00 AM</option>
+                <option value="10:15">10:15 AM</option>
+                <option value="10:30">10:30 AM</option>
+                <option value="10:45">10:45 AM</option>
+                <option value="11:00">11:00 AM</option>
+                <option value="11:15">11:15 AM</option>
+                <option value="11:30">11:30 AM</option>
+                <option value="11:45">11:45 AM</option>
+                <option value="12:00">12:00 PM</option>
+                <option value="12:15">12:15 PM</option>
+                <option value="12:30">12:30 PM</option>
+                <option value="12:45">12:45 PM</option>
+                <option value="13:00">01:00 PM</option>
+                <option value="13:15">01:15 PM</option>
+                <option value="13:30">01:30 PM</option>
+                <option value="13:45">01:45 PM</option>
+                <option value="14:00">02:00 PM</option>
+                <option value="14:15">02:15 PM</option>
+                <option value="14:30">02:30 PM</option>
+                <option value="14:45">02:45 PM</option>
+                <option value="15:00">03:00 PM</option>
+                <option value="15:15">03:15 PM</option>
+                <option value="15:30">03:30 PM</option>
+                <option value="15:45">03:45 PM</option>
+                <option value="16:00">04:00 PM</option>
+                <option value="16:15">04:15 PM</option>
+                <option value="16:30">04:30 PM</option>
+                <option value="16:45">04:45 PM</option>
+                <option value="17:00">05:00 PM</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="input-group full-width">
+            <label for="reason">Reason for Visit</label>
+            <div class="input-wrapper">
+              <span class="icon"><i class="fa fa-notes-medical"></i></span>
+              <input type="text" id="reason" name="reason" placeholder="Enter reason for visit" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-save">
+            <i class="fas fa-plus"></i> Save Appointment
+          </button>
+        </div>
+      </form>
+    </div>
   </main>
 
-  <!-- ✅ Success message container -->
+  <!-- Success message container -->
   <div id="successMessage" class="success-message">
-    ✅ Appointment booked successfully!
+    <i class="fas fa-check-circle"></i>
+    <span>Appointment booked successfully!</span>
   </div>
 
   <script src="script.js"></script>
