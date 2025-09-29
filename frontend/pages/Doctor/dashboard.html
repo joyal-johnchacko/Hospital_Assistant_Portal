@@ -253,11 +253,29 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      // Get doctor name from localStorage or use default
-      const doctorName = localStorage.getItem("doctorUsername") || "Smith";
-      document.getElementById("doctorName").textContent = doctorName;
+      // 1. Get the logged-in doctor's data from sessionStorage
+      const doctorDataString = sessionStorage.getItem('loggedInDoctor');
 
-      // Update date and time
+      // 2. Security Check: If no data is found, redirect to the login page
+      if (!doctorDataString) {
+        alert('You must be logged in as a doctor to view this page.');
+        // Adjust the path if your login page is elsewhere
+        window.location.href = '../Login/loginpage.html'; 
+        return; // Stop the script from running further
+      }
+
+      // 3. If data exists, convert it from a string back into a usable object
+      const doctorData = JSON.parse(doctorDataString);
+
+      // 4. Update the welcome message with the doctor's actual full name
+      const doctorNameSpan = document.getElementById('doctorName');
+      if (doctorNameSpan) {
+        doctorNameSpan.textContent = doctorData.fullName;
+      }
+
+      // --- The rest of your original dashboard logic can remain below ---
+      // For example, the code to update the date and time, and animate stats.
+      // (This example just focuses on the login part)
       function updateDateTime() {
         const now = new Date();
         const options = { 
@@ -271,44 +289,9 @@
         };
         document.getElementById("currentDateTime").textContent = now.toLocaleDateString('en-US', options);
       }
-      
       updateDateTime();
-      setInterval(updateDateTime, 60000); // Update every minute
-
-      // Load appointment data and calculate statistics
-      const appointments = JSON.parse(localStorage.getItem("appointments")) || [];
+      setInterval(updateDateTime, 60000);
       
-      // Calculate total prescriptions across all appointments
-      const totalPrescriptions = appointments.reduce((count, appointment) => {
-        if (appointment.prescriptionsHistory) {
-          return count + appointment.prescriptionsHistory.length;
-        }
-        return appointment.prescription ? count + 1 : count;
-      }, 0);
-
-      // Update statistics with animation
-      function animateNumber(element, targetNumber) {
-        const duration = 1000;
-        const steps = 30;
-        const increment = targetNumber / steps;
-        let current = 0;
-        
-        const timer = setInterval(() => {
-          current += increment;
-          if (current >= targetNumber) {
-            current = targetNumber;
-            clearInterval(timer);
-          }
-          element.textContent = Math.floor(current);
-        }, duration / steps);
-      }
-
-      // Animate statistics
-      setTimeout(() => {
-        animateNumber(document.getElementById("totalAppointments"), appointments.length);
-        animateNumber(document.getElementById("totalPatients"), appointments.length);
-        animateNumber(document.getElementById("totalPrescriptions"), totalPrescriptions);
-      }, 500);
     });
   </script>
 </body>

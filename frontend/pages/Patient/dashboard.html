@@ -22,7 +22,7 @@
 
     header {
       text-align: center;
-      margin-bottom: 3rem;
+      margin-bottom: 1rem; /* Adjusted margin */
       padding: 2rem 0;
     }
 
@@ -32,11 +32,19 @@
       margin-right: 1rem;
     }
 
-    header {
+    header h1 { /* Changed from header to h1 for clarity */
       font-size: 3rem;
       font-weight: 700;
       color: #60a5fa;
       letter-spacing: -0.02em;
+    }
+    
+    /* This is the new style for the welcome message */
+    .welcome-message {
+      text-align: center;
+      font-size: 1.25rem;
+      color: #cbd5e1;
+      margin-bottom: 3rem;
     }
 
     .container {
@@ -213,7 +221,7 @@
         grid-template-columns: 1fr;
       }
       
-      header {
+      header h1 {
         font-size: 2rem;
       }
       
@@ -270,9 +278,12 @@
   <div class="floating-elements"></div>
   
   <header>
-    <i class="fa-solid fa-hospital"></i> Patient Dashboard
+    <h1><i class="fa-solid fa-hospital"></i> Patient Dashboard</h1>
   </header>
 
+  <div class="welcome-message">
+    Welcome, <span id="patientFullName">Patient</span>!
+  </div>
   <div class="container grid">
     <a href="create.html" class="card link-card">
       <h2>
@@ -289,21 +300,20 @@
     </a>
 
     <a href="prescriptions.html" class="card link-card">
-  <div class="card-content">
-    <h2>
-      <div style="display: flex; align-items: center;">
-        <i class="fa-solid fa-pills"></i>
-        <span>Prescriptions</span>
+      <div class="card-content">
+        <h2>
+          <div style="display: flex; align-items: center;">
+            <i class="fa-solid fa-pills"></i>
+            <span>Prescriptions</span>
+          </div>
+        </h2>
+        <p>Access your prescribed medications, dosages, and treatment plans. View medication history and refill requests.</p>
       </div>
-    </h2>
-    <p>Access your prescribed medications, dosages, and treatment plans. View medication history and refill requests.</p>
-  </div>
-  <div class="btn">
-    <i class="fa-solid fa-list"></i>
-    View Prescriptions
-  </div>
-  </a>
-
+      <div class="btn">
+        <i class="fa-solid fa-list"></i>
+        View Prescriptions
+      </div>
+    </a>
 
     <a href="contact.html" class="card link-card">
       <h2>
@@ -326,60 +336,33 @@
   </a>
 
   <script>
-    // Add smooth interactions
-    document.querySelectorAll('.card').forEach(card => {
-      card.addEventListener('mouseenter', function() {
-        this.style.transform = 'translateY(-8px) scale(1.02)';
-      });
-      
-      card.addEventListener('mouseleave', function() {
-        this.style.transform = 'translateY(0) scale(1)';
-      });
-    });
+    // This script runs as soon as the dashboard page loads
+    document.addEventListener('DOMContentLoaded', () => {
+        // 1. Get the saved patient data from sessionStorage
+        const patientDataString = sessionStorage.getItem('loggedInPatient');
 
-    // Add click ripple effect
-    document.querySelectorAll('.btn, .card').forEach(element => {
-      element.addEventListener('click', function(e) {
-        const ripple = document.createElement('span');
-        const rect = this.getBoundingClientRect();
-        const size = Math.max(rect.width, rect.height);
-        const x = e.clientX - rect.left - size / 2;
-        const y = e.clientY - rect.top - size / 2;
-        
-        ripple.style.cssText = `
-          position: absolute;
-          border-radius: 50%;
-          background: rgba(255, 255, 255, 0.3);
-          transform: scale(0);
-          animation: ripple 0.6s linear;
-          width: ${size}px;
-          height: ${size}px;
-          left: ${x}px;
-          top: ${y}px;
-          pointer-events: none;
-        `;
-        
-        this.style.position = 'relative';
-        this.style.overflow = 'hidden';
-        this.appendChild(ripple);
-        
-        setTimeout(() => {
-          ripple.remove();
-        }, 600);
-      });
-    });
-
-    // Add CSS animation for ripple effect
-    const style = document.createElement('style');
-    style.textContent = `
-      @keyframes ripple {
-        to {
-          transform: scale(4);
-          opacity: 0;
+        // 2. Security Check: Is the user actually logged in?
+        if (!patientDataString) {
+            // If no data is found, they are not logged in.
+            // Redirect them back to the login page.
+            alert('You must be logged in to view this page.');
+            window.location.href = '../Login/loginpage.html';
+            return; // Stop the rest of the script from running
         }
-      }
-    `;
-    document.head.appendChild(style);
-  </script>
+
+        // 3. If data exists, convert it from a string back into a usable object
+        const patientData = JSON.parse(patientDataString);
+
+        // 4. Find the placeholder span we created using its ID
+        const welcomeSpan = document.getElementById('patientFullName');
+
+        // 5. Update the page content with the patient's actual full name
+        if (welcomeSpan) {
+            welcomeSpan.textContent = patientData.fullName;
+        }
+    });
+
+    // (The decorative scripts for card animations can remain below if you had any)
+</script>
 </body>
 </html>
