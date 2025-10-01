@@ -152,13 +152,8 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 1.5rem;
-            margin-bottom: 1.5rem;
         }
-
-        .form-grid-full {
-            grid-column: 1 / -1;
-        }
-
+        
         /* Form Groups */
         .form-group {
             display: flex;
@@ -199,12 +194,7 @@
             border-color: var(--primary-color);
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
-
-        .form-textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
-
+        
         .form-input::placeholder {
             color: var(--text-muted);
         }
@@ -227,48 +217,13 @@
             padding-left: 2.5rem;
         }
 
-        /* File Upload */
-        .file-upload {
-            position: relative;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .file-input {
-            display: none;
-        }
-
-        .file-label {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1rem;
-            background: var(--surface-hover);
-            border: 1px solid var(--border-color);
-            border-radius: 0.5rem;
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 0.875rem;
-        }
-
-        .file-label:hover {
-            background: var(--background-color);
-            border-color: var(--primary-color);
-            color: var(--text-primary);
-        }
-
-        .file-name {
-            font-size: 0.875rem;
-            color: var(--text-muted);
-        }
-
         /* Radio Group */
         .radio-group {
             display: flex;
             gap: 1.5rem;
             flex-wrap: wrap;
+            align-items: center;
+            height: 100%;
         }
 
         .radio-item {
@@ -287,31 +242,6 @@
             font-size: 0.875rem;
             color: var(--text-primary);
             cursor: pointer;
-        }
-
-        /* Checkbox */
-        .checkbox-group {
-            display: flex;
-            align-items: flex-start;
-            gap: 0.75rem;
-            margin-top: 1rem;
-            padding: 1rem;
-            background: var(--background-color);
-            border-radius: 0.5rem;
-            border: 1px solid var(--border-color);
-        }
-
-        .checkbox-input {
-            width: 1rem;
-            height: 1rem;
-            accent-color: var(--primary-color);
-            margin-top: 0.125rem;
-        }
-
-        .checkbox-label {
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-            line-height: 1.5;
         }
 
         /* Form Actions */
@@ -362,32 +292,36 @@
             border-color: var(--text-muted);
         }
 
-        /* Success Message */
-        .success-message {
+        /* Success/Error Message */
+        .message-box {
             display: none;
-            background: rgba(5, 150, 105, 0.1);
-            border: 1px solid rgba(5, 150, 105, 0.2);
             border-radius: 0.5rem;
             padding: 1rem;
             margin-bottom: 1rem;
-            color: var(--success-color);
             text-align: center;
         }
+        
+        .message-box.success {
+             background: rgba(5, 150, 105, 0.1);
+            border: 1px solid rgba(5, 150, 105, 0.2);
+            color: var(--success-color);
+        }
 
-        .success-message.show {
+        .message-box.error {
+             background: rgba(220, 38, 38, 0.1);
+            border: 1px solid rgba(220, 38, 38, 0.2);
+            color: var(--danger-color);
+        }
+
+        .message-box.show {
             display: block;
         }
+
 
         /* Error Styles */
         .form-input.error,
         .form-select.error {
             border-color: var(--danger-color);
-        }
-
-        .error-message {
-            font-size: 0.75rem;
-            color: var(--danger-color);
-            margin-top: 0.25rem;
         }
 
         /* Responsive */
@@ -413,13 +347,12 @@
                 grid-template-columns: 1fr;
             }
 
-            .form-actions {
-                flex-direction: column-reverse;
+            .radio-group {
+                flex-direction: row;
             }
 
-            .radio-group {
-                flex-direction: column;
-                gap: 1rem;
+            .form-actions {
+                flex-direction: column-reverse;
             }
         }
 
@@ -433,7 +366,6 @@
 </head>
 <body>
     <div class="dashboard-container">
-        <!-- Breadcrumb -->
         <nav class="breadcrumb">
             <a href="admin-dashboard.html">Admin Dashboard</a>
             <span>/</span>
@@ -444,13 +376,11 @@
             <span>Add Receptionist</span>
         </nav>
 
-        <!-- Page Header -->
         <div class="page-header">
             <h1 class="page-title">Add New Receptionist</h1>
             <p class="page-subtitle">Enter the receptionist's information to add them to your healthcare system</p>
         </div>
 
-        <!-- Form Container -->
         <div class="form-container">
             <div class="form-header">
                 <h2>
@@ -461,89 +391,55 @@
             </div>
 
             <form class="form-body" id="receptionistForm">
-                <!-- Success Message -->
-                <div class="success-message" id="successMessage">
-                    <i class="fas fa-check-circle"></i>
-                    Receptionist has been successfully added to the system!
-                </div>
+                <div class="message-box" id="messageBox"></div>
 
-                <!-- Personal Information -->
                 <div class="form-section">
                     <h3 class="section-title">
-                        <i class="fas fa-user section-icon"></i>
-                        Personal Information
+                        <i class="fas fa-user-check section-icon"></i>
+                        Receptionist Details
                     </h3>
                     
                     <div class="form-grid">
                         <div class="form-group">
-                            <label class="form-label" for="firstName">
-                                First Name <span class="required">*</span>
+                            <label class="form-label" for="fullName">
+                                Full Name <span class="required">*</span>
                             </label>
                             <div class="input-group">
                                 <i class="fas fa-user input-icon"></i>
-                                <input type="text" id="firstName" class="form-input" placeholder="Enter first name" required>
+                                <input type="text" id="fullName" class="form-input" placeholder="Enter full name" required>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label" for="lastName">
-                                Last Name <span class="required">*</span>
+                            <label class="form-label" for="age">
+                                Age <span class="required">*</span>
                             </label>
                             <div class="input-group">
-                                <i class="fas fa-user input-icon"></i>
-                                <input type="text" id="lastName" class="form-input" placeholder="Enter last name" required>
+                                <i class="fas fa-hashtag input-icon"></i>
+                                <input type="number" id="age" class="form-input" placeholder="Enter age" min="18" required>
                             </div>
                         </div>
-
-                        <div class="form-group">
-                            <label class="form-label" for="dateOfBirth">
-                                Date of Birth <span class="required">*</span>
-                            </label>
-                            <div class="input-group">
-                                <i class="fas fa-calendar input-icon"></i>
-                                <input type="date" id="dateOfBirth" class="form-input" required>
-                            </div>
-                        </div>
-
+                        
                         <div class="form-group">
                             <label class="form-label">
                                 Gender <span class="required">*</span>
                             </label>
                             <div class="radio-group">
                                 <div class="radio-item">
-                                    <input type="radio" id="male" name="gender" value="male" class="radio-input" required>
+                                    <input type="radio" id="male" name="gender" value="Male" class="radio-input" required>
                                     <label for="male" class="radio-label">Male</label>
                                 </div>
                                 <div class="radio-item">
-                                    <input type="radio" id="female" name="gender" value="female" class="radio-input" required>
+                                    <input type="radio" id="female" name="gender" value="Female" class="radio-input" required>
                                     <label for="female" class="radio-label">Female</label>
                                 </div>
                                 <div class="radio-item">
-                                    <input type="radio" id="other" name="gender" value="other" class="radio-input" required>
+                                    <input type="radio" id="other" name="gender" value="Other" class="radio-input" required>
                                     <label for="other" class="radio-label">Other</label>
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="form-grid">
-                        <div class="form-group form-grid-full">
-                            <label class="form-label" for="address">
-                                Address <span class="required">*</span>
-                            </label>
-                            <textarea id="address" class="form-textarea" placeholder="Enter full address" required></textarea>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Contact Information -->
-                <div class="form-section">
-                    <h3 class="section-title">
-                        <i class="fas fa-phone section-icon"></i>
-                        Contact Information
-                    </h3>
-                    
-                    <div class="form-grid">
+                        
                         <div class="form-group">
                             <label class="form-label" for="phone">
                                 Phone Number <span class="required">*</span>
@@ -563,210 +459,17 @@
                                 <input type="email" id="email" class="form-input" placeholder="email@example.com" required>
                             </div>
                         </div>
-
-                        <div class="form-group">
-                            <label class="form-label" for="emergencyContact">
-                                Emergency Contact
-                            </label>
-                            <div class="input-group">
-                                <i class="fas fa-phone-alt input-icon"></i>
-                                <input type="tel" id="emergencyContact" class="form-input" placeholder="Emergency contact number">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label" for="emergencyName">
-                                Emergency Contact Name
-                            </label>
-                            <div class="input-group">
-                                <i class="fas fa-user-friends input-icon"></i>
-                                <input type="text" id="emergencyName" class="form-input" placeholder="Emergency contact name">
-                            </div>
-                        </div>
+                        
+                         <!-- The experience field is removed as it's not in the backend model -->
                     </div>
                 </div>
 
-                <!-- Employment Details -->
-                <div class="form-section">
-                    <h3 class="section-title">
-                        <i class="fas fa-briefcase section-icon"></i>
-                        Employment Details
-                    </h3>
-                    
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label class="form-label" for="employeeId">
-                                Employee ID
-                            </label>
-                            <div class="input-group">
-                                <i class="fas fa-id-badge input-icon"></i>
-                                <input type="text" id="employeeId" class="form-input" placeholder="Auto-generated" readonly>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label" for="department">
-                                Department <span class="required">*</span>
-                            </label>
-                            <select id="department" class="form-select" required>
-                                <option value="">Select Department</option>
-                                <option value="front-desk">Front Desk</option>
-                                <option value="reception">Reception</option>
-                                <option value="admin">Administration</option>
-                                <option value="billing">Billing</option>
-                                <option value="appointments">Appointments</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label" for="position">
-                                Position <span class="required">*</span>
-                            </label>
-                            <div class="input-group">
-                                <i class="fas fa-user-tag input-icon"></i>
-                                <input type="text" id="position" class="form-input" placeholder="e.g., Senior Receptionist" required>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label" for="startDate">
-                                Start Date <span class="required">*</span>
-                            </label>
-                            <div class="input-group">
-                                <i class="fas fa-calendar-plus input-icon"></i>
-                                <input type="date" id="startDate" class="form-input" required>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label" for="shift">
-                                Shift <span class="required">*</span>
-                            </label>
-                            <select id="shift" class="form-select" required>
-                                <option value="">Select Shift</option>
-                                <option value="morning">Morning (8AM - 4PM)</option>
-                                <option value="evening">Evening (4PM - 12AM)</option>
-                                <option value="night">Night (12AM - 8AM)</option>
-                                <option value="day">Day (9AM - 5PM)</option>
-                                <option value="rotating">Rotating Shifts</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label" for="salary">
-                                Salary (Monthly)
-                            </label>
-                            <div class="input-group">
-                                <i class="fas fa-dollar-sign input-icon"></i>
-                                <input type="number" id="salary" class="form-input" placeholder="Enter monthly salary" min="0">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Experience & Qualifications -->
-                <div class="form-section">
-                    <h3 class="section-title">
-                        <i class="fas fa-graduation-cap section-icon"></i>
-                        Experience & Qualifications
-                    </h3>
-                    
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label class="form-label" for="experience">
-                                Years of Experience <span class="required">*</span>
-                            </label>
-                            <div class="input-group">
-                                <i class="fas fa-clock input-icon"></i>
-                                <input type="number" id="experience" class="form-input" placeholder="Enter years of experience" min="0" required>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label" for="education">
-                                Education Level
-                            </label>
-                            <select id="education" class="form-select">
-                                <option value="">Select Education Level</option>
-                                <option value="high-school">High School</option>
-                                <option value="diploma">Diploma</option>
-                                <option value="bachelor">Bachelor's Degree</option>
-                                <option value="master">Master's Degree</option>
-                                <option value="other">Other</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group form-grid-full">
-                            <label class="form-label" for="skills">
-                                Skills & Certifications
-                            </label>
-                            <textarea id="skills" class="form-textarea" placeholder="List relevant skills, certifications, and training"></textarea>
-                        </div>
-
-                        <div class="form-group form-grid-full">
-                            <label class="form-label" for="previousExperience">
-                                Previous Work Experience
-                            </label>
-                            <textarea id="previousExperience" class="form-textarea" placeholder="Describe previous work experience in healthcare or related fields"></textarea>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Document Upload -->
-                <div class="form-section">
-                    <h3 class="section-title">
-                        <i class="fas fa-file-upload section-icon"></i>
-                        Documents
-                    </h3>
-                    
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label class="form-label">
-                                Resume/CV
-                            </label>
-                            <div class="file-upload">
-                                <label for="resume" class="file-label">
-                                    <i class="fas fa-upload"></i>
-                                    Choose File
-                                </label>
-                                <input type="file" id="resume" class="file-input" accept=".pdf,.doc,.docx">
-                                <span class="file-name" id="resumeName">No file selected</span>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">
-                                Photo ID
-                            </label>
-                            <div class="file-upload">
-                                <label for="photoId" class="file-label">
-                                    <i class="fas fa-upload"></i>
-                                    Choose File
-                                </label>
-                                <input type="file" id="photoId" class="file-input" accept="image/*,.pdf">
-                                <span class="file-name" id="photoIdName">No file selected</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Terms and Conditions -->
-                <div class="form-section">
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="terms" class="checkbox-input" required>
-                        <label for="terms" class="checkbox-label">
-                            I confirm that all information provided is accurate and complete. I understand that this information will be used for employment purposes and agree to the healthcare facility's terms and conditions, privacy policy, and code of conduct. <span class="required">*</span>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Form Actions -->
                 <div class="form-actions">
                     <a href="receptionistlist.html" class="btn btn-secondary">
                         <i class="fas fa-times"></i>
                         Cancel
                     </a>
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="btn btn-primary" id="submitBtn">
                         <i class="fas fa-user-plus"></i>
                         Add Receptionist
                     </button>
@@ -776,46 +479,25 @@
     </div>
 
 <script>
-    // Auto-generate Employee ID
-    function generateEmployeeId() {
-        const date = new Date();
-        const year = date.getFullYear().toString().slice(-2);
-        const month = (date.getMonth() + 1).toString().padStart(2, '0');
-        const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
-        return `RC${year}${month}${random}`;
-    }
-
-    // Set auto-generated Employee ID
-    document.getElementById('employeeId').value = generateEmployeeId();
-
-    // Set default start date to today
-    document.getElementById('startDate').value = new Date().toISOString().split('T')[0];
-
-    // File upload handlers
-    document.getElementById('resume').addEventListener('change', function() {
-        const fileName = this.files[0] ? this.files[0].name : 'No file selected';
-        document.getElementById('resumeName').textContent = fileName;
-    });
-
-    document.getElementById('photoId').addEventListener('change', function() {
-        const fileName = this.files[0] ? this.files[0].name : 'No file selected';
-        document.getElementById('photoIdName').textContent = fileName;
-    });
-
-    // Form validation + submission
-    document.getElementById('receptionistForm').addEventListener('submit', function(e) {
+    document.getElementById('receptionistForm').addEventListener('submit', async function(e) {
         e.preventDefault();
+        const submitBtn = document.getElementById('submitBtn');
+        const messageBox = document.getElementById('messageBox');
+        
+        // Disable button to prevent multiple submissions
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
+
+        // Clear previous messages
+        messageBox.className = 'message-box';
+        messageBox.textContent = '';
 
         // Validate required fields
-        const requiredFields = [
-            'firstName', 'lastName', 'dateOfBirth',
-            'address', 'phone', 'email',
-            'department', 'position', 'startDate', 'shift', 'experience'
-        ];
+        const requiredFields = ['fullName', 'age', 'phone', 'email'];
         let isValid = true;
-
-        requiredFields.forEach(field => {
-            const element = document.getElementById(field);
+        
+        requiredFields.forEach(fieldId => {
+            const element = document.getElementById(fieldId);
             if (!element.value.trim()) {
                 element.classList.add('error');
                 isValid = false;
@@ -825,71 +507,69 @@
         });
 
         const genderSelected = document.querySelector('input[name="gender"]:checked');
-        if (!genderSelected) isValid = false;
-
-        const termsAccepted = document.getElementById('terms').checked;
-        if (!termsAccepted) {
+        if (!genderSelected) {
             isValid = false;
-            document.getElementById('terms').style.outline = '2px solid var(--danger-color)';
-        } else {
-            document.getElementById('terms').style.outline = 'none';
+            // You can add a visual error indicator for the radio group here
         }
 
-        if (!isValid) return;
+        if (!isValid) {
+             submitBtn.disabled = false;
+             submitBtn.innerHTML = '<i class="fas fa-user-plus"></i> Add Receptionist';
+             return;
+        }
 
         // Collect form data
         const formData = {
-            employeeId: document.getElementById('employeeId').value,
-            firstName: document.getElementById('firstName').value,
-            lastName: document.getElementById('lastName').value,
-            dateOfBirth: document.getElementById('dateOfBirth').value,
+            fullName: document.getElementById('fullName').value,
+            age: parseInt(document.getElementById('age').value, 10),
             gender: genderSelected.value,
-            address: document.getElementById('address').value,
             phone: document.getElementById('phone').value,
-            email: document.getElementById('email').value,
-            emergencyContact: document.getElementById('emergencyContact').value,
-            emergencyName: document.getElementById('emergencyName').value,
-            department: document.getElementById('department').value,
-            position: document.getElementById('position').value,
-            joinDate: document.getElementById('startDate').value,
-            shift: document.getElementById('shift').value,
-            salary: document.getElementById('salary').value,
-            experience: document.getElementById('experience').value,
-            education: document.getElementById('education').value,
-            skills: document.getElementById('skills').value,
-            previousExperience: document.getElementById('previousExperience').value,
-            status: 'active',
-            dateAdded: new Date().toISOString(),
-            id: Date.now(),
-            employeeId: document.getElementById('employeeId').value,    
+            email: document.getElementById('email').value
         };
 
-        // Save to localStorage
-        let receptionists = JSON.parse(localStorage.getItem('receptionists')) || [];
-        receptionists.push(formData);
-        localStorage.setItem('receptionists', JSON.stringify(receptionists));
+        try {
+            // Send data to the backend API
+            const response = await fetch('http://localhost:8080/api/receptionists/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
 
-        // Show success message
-        const successMsg = document.getElementById('successMessage');
-        successMsg.classList.add('show');
+            const responseText = await response.text();
 
-        // Reset form after short delay
-        setTimeout(() => {
-            document.getElementById('receptionistForm').reset();
-            document.getElementById('employeeId').value = generateEmployeeId();
-            document.getElementById('resumeName').textContent = 'No file selected';
-            document.getElementById('photoIdName').textContent = 'No file selected';
-        }, 500);
+            if (response.ok) {
+                // Handle success
+                messageBox.textContent = 'Receptionist added successfully!';
+                messageBox.className = 'message-box success show';
+                
+                document.getElementById('receptionistForm').reset();
 
-        // Hide success message + redirect after 2s
-        setTimeout(() => {
-            successMsg.classList.remove('show');
-            window.location.href = "receptionistlist.html"; // redirect
-        }, 2000);
+                // Redirect after a short delay
+                setTimeout(() => {
+                    window.location.href = "receptionistlist.html"; 
+                }, 2000);
+
+            } else {
+                // Handle errors (e.g., email already exists)
+                messageBox.textContent = responseText || 'An error occurred.';
+                messageBox.className = 'message-box error show';
+            }
+        } catch (error) {
+            // Handle network or other unexpected errors
+            console.error('Error:', error);
+            messageBox.textContent = 'Could not connect to the server. Please try again later.';
+            messageBox.className = 'message-box error show';
+        } finally {
+            // Re-enable the button
+             submitBtn.disabled = false;
+             submitBtn.innerHTML = '<i class="fas fa-user-plus"></i> Add Receptionist';
+        }
     });
 
     // Remove error styling on input
-    document.querySelectorAll('.form-input, .form-select').forEach(element => {
+    document.querySelectorAll('.form-input').forEach(element => {
         element.addEventListener('input', function() {
             this.classList.remove('error');
         });
