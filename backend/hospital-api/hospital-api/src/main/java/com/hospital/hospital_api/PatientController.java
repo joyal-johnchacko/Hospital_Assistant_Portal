@@ -30,4 +30,23 @@ public class PatientController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body("Patient account created successfully.");
     }
+
+    // Add this new method for login
+    @PostMapping("/login")
+    public ResponseEntity<?> loginPatient(@RequestBody Patient loginRequest) {
+        //  Find the patient by their full name
+        Optional<Patient> patientOptional = patientRepository.findByFullName(loginRequest.getFullName());
+
+        //  Check if patient exists and if the password matches
+        if (patientOptional.isPresent()) {
+            Patient patient = patientOptional.get();
+            if (patient.getPassword().equals(loginRequest.getPassword())) {
+                // If credentials are correct, return a success response with patient data
+                return ResponseEntity.ok(patient);
+            }
+        }
+
+        //  If patient not found or password incorrect, return an error
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid full name or password.");
+    }
 }

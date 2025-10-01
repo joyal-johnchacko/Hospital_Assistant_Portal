@@ -1,0 +1,3 @@
+ALTER TABLE doctors
+ADD COLUMN gender VARCHAR(10),
+ADD COLUMN age INT;
