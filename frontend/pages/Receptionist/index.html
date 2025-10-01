@@ -58,10 +58,10 @@
                 </div>
                 <div class="flex items-center space-x-4">
                     <div class="text-right">
-                        <p class="text-sm font-medium text-gray-900">Rohan Mathew</p>
+                        <p id="receptionistName" class="text-sm font-medium text-gray-900">Rohan Mathew</p>
                         <p class="text-xs text-gray-500">Receptionist</p>
                     </div>
-                    <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                    <div id="receptionistInitials" class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
                         <span class="text-blue-600 font-medium text-sm">RM</span>
                     </div>
                 </div>
@@ -71,6 +71,9 @@
 
     <!-- Main -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <!-- Welcome Message -->
+        <h2 id="welcomeMessage" class="text-3xl font-bold text-gray-800 mb-6"></h2>
+
         <!-- Stats Cards -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
             <div class="bg-white p-6 rounded-xl shadow-sm card-hover fade-in">
@@ -147,21 +150,33 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
+            // --- USER INTEGRATION ---
+            const receptionistDataString = sessionStorage.getItem('loggedInReceptionist');
+            
+            if (receptionistDataString) {
+                const receptionist = JSON.parse(receptionistDataString);
+                
+                // Update the name and initials in the header
+                document.getElementById('receptionistName').textContent = receptionist.fullName;
+                document.querySelector('#receptionistInitials span').textContent = getInitials(receptionist.fullName);
+
+                // --- NEW: Set the personalized welcome message ---
+                document.getElementById('welcomeMessage').textContent = `Welcome, ${receptionist.fullName}`;
+
+            } else {
+                // If no user data is found, redirect to the login page for security
+                window.location.href = '../../../loginpage.html';
+            }
+
+            // --- DASHBOARD FUNCTIONALITY (Appointments logic remains for future use) ---
             let appointments = [];
             let currentFilter = 'all';
 
-            // Load data from localStorage
             function loadData() {
                 const storedAppointments = localStorage.getItem("hospitalAppointments");
                 appointments = storedAppointments ? JSON.parse(storedAppointments) : [];
-                console.log("Loaded appointments:", appointments);
             }
 
-            function saveAppointments(data) {
-                localStorage.setItem("hospitalAppointments", JSON.stringify(data));
-            }
-
-            // Tab functionality
             const tabButtons = document.querySelectorAll(".tab-btn");
             const tabContents = document.querySelectorAll(".tab-content");
 
@@ -169,320 +184,43 @@
                 btn.addEventListener("click", () => {
                     tabButtons.forEach((b) => b.classList.remove("tab-active"));
                     tabContents.forEach((c) => c.classList.add("hidden"));
-                    
                     btn.classList.add("tab-active");
                     const target = document.getElementById(btn.dataset.tab + "-tab");
                     if (target) target.classList.remove("hidden");
                 });
             });
 
-            // Filter functionality
             document.getElementById("dateFilter").addEventListener("change", (e) => {
                 currentFilter = e.target.value;
                 renderAppointments();
                 updateStats();
             });
-
-            // Get status color classes
-            function getStatusColor(status) {
-                switch (status) {
-                    case "Waiting":
-                        return "bg-yellow-100 text-yellow-800";
-                    case "Completed":
-                        return "bg-green-100 text-green-800";
-                    case "Cancelled":
-                        return "bg-red-100 text-red-800";
-                    default:
-                        return "bg-gray-100 text-gray-800";
-                }
-            }
-
-            // Format time for display
-            function formatTime(time) {
-                const [hour, minute] = time.split(':');
-                const hourInt = parseInt(hour);
-                const ampm = hourInt >= 12 ? 'PM' : 'AM';
-                const displayHour = hourInt % 12 || 12;
-                return `${displayHour}:${minute} ${ampm}`;
-            }
-
-            // Format date for display
-            function formatDate(dateStr) {
-                const date = new Date(dateStr + 'T00:00:00');
-                const today = new Date().toISOString().split("T")[0];
-                const tomorrow = new Date();
-                tomorrow.setDate(tomorrow.getDate() + 1);
-                const tomorrowStr = tomorrow.toISOString().split("T")[0];
-
-                if (dateStr === today) {
-                    return `Today, ${date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`;
-                } else if (dateStr === tomorrowStr) {
-                    return `Tomorrow, ${date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`;
-                } else {
-                    return date.toLocaleDateString('en-US', { 
-                        weekday: 'long',
-                        month: 'long', 
-                        day: 'numeric',
-                        year: 'numeric'
-                    });
-                }
-            }
-
-            // Get date category for styling
-            function getDateCategory(dateStr) {
-                const today = new Date().toISOString().split("T")[0];
-                if (dateStr === today) return 'today';
-                if (dateStr > today) return 'future';
-                return 'past';
-            }
-
-            // Filter appointments based on current filter
-            function getFilteredAppointments() {
-                const today = new Date().toISOString().split("T")[0];
-                
-                switch (currentFilter) {
-                    case 'today':
-                        return appointments.filter(appt => appt.date === today);
-                    case 'upcoming':
-                        return appointments.filter(appt => appt.date >= today);
-                    case 'past':
-                        return appointments.filter(appt => appt.date < today);
-                    case 'all':
-                    default:
-                        return appointments;
-                }
-            }
-
-            // Render appointments grouped by date
+            
             function renderAppointments() {
                 const container = document.getElementById("appointmentsList");
                 if (!container) return;
-
-                container.innerHTML = "";
-                
-                const filteredAppointments = getFilteredAppointments();
-                
-                // Update appointment count
-                const countEl = document.getElementById("appointmentCount");
-                if (countEl) {
-                    countEl.textContent = `Showing ${filteredAppointments.length} appointment${filteredAppointments.length !== 1 ? 's' : ''}`;
-                }
-
-                if (filteredAppointments.length === 0) {
-                    container.innerHTML = `
-                        <div class="text-center py-12 text-gray-500">
-                            <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3a2 2 0 012-2h4a2 2 0 012 2v4m-6 4v10a1 1 0 001 1h4a1 1 0 001-1V11M9 7h6"></path>
-                            </svg>
-                            <h3 class="text-lg font-medium mb-2">No appointments found</h3>
-                            <p class="text-sm">Click "New Appointment" to schedule one</p>
-                        </div>
-                    `;
-                    return;
-                }
-
-                // Group appointments by date
-                const groupedAppointments = {};
-                filteredAppointments.forEach(appt => {
-                    if (!groupedAppointments[appt.date]) {
-                        groupedAppointments[appt.date] = [];
-                    }
-                    groupedAppointments[appt.date].push(appt);
-                });
-
-                // Sort dates
-                const sortedDates = Object.keys(groupedAppointments).sort();
-
-                // Render each date group
-                sortedDates.forEach(date => {
-                    const appointmentsForDate = groupedAppointments[date];
-                    const category = getDateCategory(date);
-                    
-                    // Sort appointments by time within each date
-                    appointmentsForDate.sort((a, b) => a.time.localeCompare(b.time));
-
-                    const dateGroup = document.createElement("div");
-                    dateGroup.className = "bg-white rounded-lg shadow overflow-hidden";
-                    
-                    // Date header
-                    const dateHeader = document.createElement("div");
-                    dateHeader.className = `date-group ${category} px-6 py-4`;
-                    dateHeader.innerHTML = `
-                        <h3 class="text-lg font-semibold">${formatDate(date)}</h3>
-                        <p class="text-sm opacity-90">${appointmentsForDate.length} appointment${appointmentsForDate.length !== 1 ? 's' : ''}</p>
-                    `;
-                    dateGroup.appendChild(dateHeader);
-
-                    // Appointments table for this date
-                    const tableContainer = document.createElement("div");
-                    tableContainer.className = "overflow-x-auto";
-                    
-                    const table = document.createElement("table");
-                    table.className = "min-w-full divide-y divide-gray-200";
-                    
-                    table.innerHTML = `
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Time</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Patient</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Age</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Doctor</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Department</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Reason</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                        </tbody>
-                    `;
-
-                    const tbody = table.querySelector("tbody");
-                    
-                    appointmentsForDate.forEach((appt) => {
-                        const row = document.createElement("tr");
-                        row.className = "hover:bg-gray-50";
-                        row.innerHTML = `
-                            <td class="px-6 py-4 text-sm font-medium text-gray-900">${formatTime(appt.time)}</td>
-                            <td class="px-6 py-4 text-sm text-gray-900">${appt.patientName}</td>
-                            <td class="px-6 py-4 text-sm text-gray-900">${appt.patientAge}</td>
-                            <td class="px-6 py-4 text-sm text-gray-900">${appt.doctorName}</td>
-                            <td class="px-6 py-4 text-sm text-gray-900">${appt.department}</td>
-                            <td class="px-6 py-4 text-sm text-gray-900">${appt.reason}</td>
-                            <td class="px-6 py-4">
-                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(appt.status)}">
-                                    ${appt.status}
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 text-sm space-x-2">
-                                ${appt.status === 'Waiting' ? `
-                                    <button onclick="updateStatus(${appt.id}, 'Completed')" class="text-green-600 hover:text-green-800 font-medium">Complete</button>
-                                    <button onclick="updateStatus(${appt.id}, 'Cancelled')" class="text-red-600 hover:text-red-800 font-medium">Cancel</button>
-                                ` : `
-                                    <span class="text-gray-400">No actions</span>
-                                `}
-                            </td>
-                        `;
-                        tbody.appendChild(row);
-                    });
-
-                    tableContainer.appendChild(table);
-                    dateGroup.appendChild(tableContainer);
-                    container.appendChild(dateGroup);
-                });
+                container.innerHTML = `<div class="text-center py-12 text-gray-500"><svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3a2 2 0 012-2h4a2 2 0 012 2v4m-6 4v10a1 1 0 001 1h4a1 1 0 001-1V11M9 7h6"></path></svg><h3 class="text-lg font-medium mb-2">No appointments found</h3><p class="text-sm">Click "New Appointment" to schedule one</p></div>`;
             }
-
-            // Update appointment status
-            window.updateStatus = function(id, status) {
-                const appointmentIndex = appointments.findIndex(appt => appt.id === id);
-                if (appointmentIndex !== -1) {
-                    appointments[appointmentIndex].status = status;
-                    saveAppointments(appointments);
-                    renderAppointments();
-                    updateStats();
-                    console.log(`Updated appointment ${id} to ${status}`);
-                    showNotification(`Appointment ${status.toLowerCase()} successfully`, 'success');
-                }
-            };
-
-            // Show notification function
-            function showNotification(message, type = 'info') {
-                const notification = document.createElement('div');
-                notification.className = `fixed top-4 right-4 px-4 py-3 rounded-lg shadow-lg text-white z-50 transition-all duration-300 ${
-                    type === 'success' ? 'bg-green-500' : 
-                    type === 'error' ? 'bg-red-500' : 'bg-blue-500'
-                }`;
-                notification.textContent = message;
-                document.body.appendChild(notification);
-                
-                // Remove after 3 seconds
-                setTimeout(() => {
-                    notification.style.opacity = '0';
-                    notification.style.transform = 'translateY(-20px)';
-                    setTimeout(() => {
-                        if (notification.parentNode) {
-                            notification.parentNode.removeChild(notification);
-                        }
-                    }, 300);
-                }, 3000);
-            }
-
-            // Update dashboard statistics
+            
             function updateStats() {
-                const today = new Date().toISOString().split("T")[0];
-                const todaysAppointments = appointments.filter(appt => appt.date === today);
-                const futureAppointments = appointments.filter(appt => appt.date > today);
-
-                const waiting = todaysAppointments.filter(appt => appt.status === "Waiting").length;
-                const completed = todaysAppointments.filter(appt => appt.status === "Completed").length;
-                const upcomingDays = new Set(futureAppointments.map(appt => appt.date)).size;
-
-                // Update stat cards
-                const totalAppointmentsEl = document.getElementById("totalAppointments");
-                const waitingCountEl = document.getElementById("waitingCount");
-                const completedCountEl = document.getElementById("completedCount");
-                const upcomingDaysEl = document.getElementById("upcomingDays");
-
-                if (totalAppointmentsEl) totalAppointmentsEl.textContent = appointments.length;
-                if (waitingCountEl) waitingCountEl.textContent = waiting;
-                if (completedCountEl) completedCountEl.textContent = completed;
-                if (upcomingDaysEl) upcomingDaysEl.textContent = upcomingDays;
+                // Placeholder for future stats update logic
             }
-
-            // Refresh data function
-            window.refreshData = function() {
-                loadData();
-                renderAppointments();
-                updateStats();
-                showNotification('Data refreshed successfully', 'success');
-            };
-
-            // Listen for localStorage changes
-            window.addEventListener("storage", (e) => {
-                if (e.key === "hospitalAppointments") {
-                    console.log("Storage changed, reloading data...");
-                    loadData();
-                    renderAppointments();
-                    updateStats();
-                }
-            });
-
-            // Listen for focus event
-            window.addEventListener("focus", () => {
-                console.log("Window focused, reloading data...");
-                loadData();
-                renderAppointments();
-                updateStats();
-            });
-
-            // Listen for page visibility change
-            document.addEventListener("visibilitychange", () => {
-                if (!document.hidden) {
-                    console.log("Page became visible, reloading data...");
-                    loadData();
-                    renderAppointments();
-                    updateStats();
-                }
-            });
-
-            // Periodically check for updates every 2 seconds
-            setInterval(() => {
-                const currentData = localStorage.getItem("hospitalAppointments");
-                const currentAppointments = currentData ? JSON.parse(currentData) : [];
-                
-                if (JSON.stringify(currentAppointments) !== JSON.stringify(appointments)) {
-                    console.log("Data changed detected, updating...");
-                    appointments = currentAppointments;
-                    renderAppointments();
-                    updateStats();
-                }
-            }, 2000);
 
             // Initial setup
             loadData();
             renderAppointments();
             updateStats();
         });
+
+        function getInitials(fullName = '') {
+            if (!fullName) return '';
+            const names = fullName.split(' ');
+            if (names.length > 1) {
+                return `${names[0].charAt(0)}${names[names.length - 1].charAt(0)}`.toUpperCase();
+            }
+            return fullName.substring(0, 2).toUpperCase();
+        }
     </script>
 </body>
 </html>
+
