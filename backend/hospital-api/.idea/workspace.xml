@@ -4,12 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8e5ae13b-e80a-4699-bad2-eef2c521a8ab" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/hospital-api/src/main/java/com/hospital/hospital_api/Doctor.java" beforeDir="false" afterPath="$PROJECT_DIR$/hospital-api/src/main/java/com/hospital/hospital_api/Doctor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hospital-api/src/main/java/com/hospital/hospital_api/DoctorController.java" beforeDir="false" afterPath="$PROJECT_DIR$/hospital-api/src/main/java/com/hospital/hospital_api/DoctorController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hospital-api/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/hospital-api/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hospital-api/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/hospital-api/target/classes/application.properties" afterDir="false" />
-    </list>
+    <list default="true" id="8e5ae13b-e80a-4699-bad2-eef2c521a8ab" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -37,7 +32,6 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "Spring Boot.HospitalApiApplication.executor": "Run",
-    "git-widget-placeholder": "master",
     "ignore.virus.scanning.warn.message": "true",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
@@ -81,7 +75,7 @@
       <updated>1759339556977</updated>
       <workItem from="1759339558701" duration="98000" />
       <workItem from="1759339692661" duration="299000" />
-      <workItem from="1759427839636" duration="1134000" />
+      <workItem from="1759427839636" duration="1872000" />
     </task>
     <servers />
   </component>
