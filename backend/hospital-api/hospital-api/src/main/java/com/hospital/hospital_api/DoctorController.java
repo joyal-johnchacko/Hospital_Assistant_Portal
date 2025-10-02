@@ -25,7 +25,7 @@ public class DoctorController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Email is already in use.");
         }
 
-        String generatedPassword = newDoctor.getFullName() + "@123";
+        String generatedPassword = newDoctor.getFullName().replaceAll("\\s+", "") + "@123";
         newDoctor.setPassword(generatedPassword);
 
         newDoctor.setDateAdded(LocalDateTime.now());
@@ -35,22 +35,34 @@ public class DoctorController {
         return ResponseEntity.status(HttpStatus.CREATED).body("Doctor added successfully.");
     }
 
-    // Add this new method for doctor login
     @PostMapping("/login")
     public ResponseEntity<?> loginDoctor(@RequestBody Doctor loginRequest) {
-        // 1. Find the doctor by their full name
         Optional<Doctor> doctorOptional = doctorRepository.findByFullName(loginRequest.getFullName());
 
-        // 2. Check if the doctor exists and if the password matches
         if (doctorOptional.isPresent()) {
             Doctor doctor = doctorOptional.get();
             if (doctor.getPassword().equals(loginRequest.getPassword())) {
-                // 3. If credentials are correct, return a success response with the doctor's data
                 return ResponseEntity.ok(doctor);
             }
         }
 
-        // 4. If doctor not found or password incorrect, return an error
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid full name or password.");
+    }
+
+    // New method to get all doctors
+    @GetMapping
+    public Iterable<Doctor> getAllDoctors() {
+        return doctorRepository.findAll();
+    }
+
+    // New method to delete a doctor by their ID
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteDoctor(@PathVariable Long id) {
+        if (doctorRepository.existsById(id)) {
+            doctorRepository.deleteById(id);
+            return ResponseEntity.ok("Doctor deleted successfully.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Doctor not found.");
+        }
     }
 }

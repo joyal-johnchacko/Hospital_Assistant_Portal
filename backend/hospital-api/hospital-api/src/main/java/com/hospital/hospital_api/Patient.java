@@ -18,6 +18,7 @@ public class Patient {
     private String email;
     private String phone;
     private int age;
+    private String gender; // New field added
     private String password;
 
     @Column("created_at")
@@ -64,6 +65,15 @@ public class Patient {
         this.age = age;
     }
 
+    // New getter and setter for gender
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
     public String getPassword() {
         return password;
     }
@@ -88,6 +98,7 @@ public class Patient {
                 ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +
                 ", age=" + age +
+                ", gender='" + gender + '\'' + // Added to toString
                 ", password='" + password + '\'' +
                 ", createdAt=" + createdAt +
                 '}';
