@@ -1,1415 +1,549 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Doctors Management - Healthcare Management System</title>
-  <meta name="description" content="View, edit, and manage doctors in the healthcare management system">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    :root {
-      --primary-color: #2563eb;
-      --primary-hover: #1d4ed8;
-      --secondary-color: #64748b;
-      --secondary-hover: #475569;
-      --success-color: #059669;
-      --success-hover: #047857;
-      --warning-color: #d97706;
-      --warning-hover: #b45309;
-      --danger-color: #dc2626;
-      --danger-hover: #b91c1c;
-      --info-color: #0891b2;
-      --background-primary: #0f172a;
-      --background-secondary: #1e293b;
-      --background-card: rgba(30, 41, 59, 0.8);
-      --background-table: rgba(51, 65, 85, 0.4);
-      --text-primary: #f8fafc;
-      --text-secondary: #cbd5e1;
-      --text-muted: #94a3b8;
-      --border-color: rgba(148, 163, 184, 0.2);
-      --border-hover: rgba(148, 163, 184, 0.4);
-      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-      --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-      --radius-sm: 0.375rem;
-      --radius-md: 0.5rem;
-      --radius-lg: 0.75rem;
-      --radius-xl: 1rem;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-      color: var(--text-primary);
-      min-height: 100vh;
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      padding: 2rem 1rem;
-    }
-
-    /* Animated background particles */
-    .background-animation {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-      overflow: hidden;
-    }
-
-    .particle {
-      position: absolute;
-      background: radial-gradient(circle, rgba(37, 99, 235, 0.3) 0%, transparent 70%);
-      border-radius: 50%;
-      animation: float 20s infinite linear;
-    }
-
-    .particle:nth-child(1) { width: 80px; height: 80px; top: 10%; left: 10%; animation-delay: 0s; }
-    .particle:nth-child(2) { width: 60px; height: 60px; top: 70%; left: 80%; animation-delay: -5s; }
-    .particle:nth-child(3) { width: 100px; height: 100px; top: 40%; left: 70%; animation-delay: -10s; }
-    .particle:nth-child(4) { width: 40px; height: 40px; top: 80%; left: 20%; animation-delay: -15s; }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.3; }
-      25% { transform: translateY(-20px) rotate(90deg); opacity: 0.6; }
-      50% { transform: translateY(-40px) rotate(180deg); opacity: 0.3; }
-      75% { transform: translateY(-20px) rotate(270deg); opacity: 0.6; }
-    }
-
-    /* Container */
-    .container {
-      max-width: 1400px;
-      margin: 0 auto;
-      position: relative;
-      z-index: 10;
-    }
-
-    /* Breadcrumb */
-    .breadcrumb {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 2rem;
-      font-size: 0.9rem;
-      color: var(--text-muted);
-    }
-
-    .breadcrumb a {
-      color: var(--primary-color);
-      text-decoration: none;
-      transition: color 0.3s ease;
-    }
-
-    .breadcrumb a:hover {
-      color: var(--primary-hover);
-    }
-
-    .breadcrumb-separator {
-      color: var(--text-muted);
-    }
-
-    /* Header */
-    .page-header {
-      background: var(--background-card);
-      backdrop-filter: blur(20px);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow-xl);
-      padding: 2rem;
-      margin-bottom: 2rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 1.5rem;
-    }
-
-    .header-content h1 {
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: var(--text-primary);
-      margin-bottom: 0.5rem;
-      background: linear-gradient(135deg, var(--primary-color), #3b82f6);
-      background-clip: text;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .header-content p {
-      color: var(--text-muted);
-      font-size: 1.1rem;
-    }
-
-    .header-stats {
-      display: flex;
-      align-items: center;
-      gap: 2rem;
-    }
-
-    .stat-item {
-      text-align: center;
-    }
-
-    .stat-number {
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--success-color);
-      display: block;
-    }
-
-    .stat-label {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    /* Controls */
-    .controls-section {
-      background: var(--background-card);
-      backdrop-filter: blur(20px);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow-lg);
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-
-    .search-filter-group {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      flex: 1;
-    }
-
-    .search-wrapper {
-      position: relative;
-      flex: 1;
-      max-width: 300px;
-    }
-
-    .search-input {
-      width: 100%;
-      padding: 0.75rem 1rem 0.75rem 2.5rem;
-      background: var(--background-table);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-lg);
-      color: var(--text-primary);
-      font-size: 0.9rem;
-      transition: all 0.3s ease;
-    }
-
-    .search-input:focus {
-      outline: none;
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-    }
-
-    .search-icon {
-      position: absolute;
-      left: 0.75rem;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--text-muted);
-      font-size: 0.9rem;
-    }
-
-    .filter-select {
-      padding: 0.75rem 1rem;
-      background: var(--background-table);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-lg);
-      color: var(--text-primary);
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      min-width: 140px;
-    }
-
-    .filter-select:focus {
-      outline: none;
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-    }
-
-    .action-buttons {
-      display: flex;
-      gap: 0.75rem;
-    }
-
-    .btn {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.75rem 1.25rem;
-      border: none;
-      border-radius: var(--radius-lg);
-      font-size: 0.9rem;
-      font-weight: 600;
-      text-decoration: none;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .btn::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-      transition: left 0.5s ease;
-    }
-
-    .btn:hover::before {
-      left: 100%;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--primary-color), #3b82f6);
-      color: var(--text-primary);
-      box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
-    }
-
-    .btn-primary:hover {
-      background: linear-gradient(135deg, var(--primary-hover), var(--primary-color));
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
-    }
-
-    .btn-secondary {
-      background: linear-gradient(135deg, var(--secondary-color), #475569);
-      color: var(--text-primary);
-      box-shadow: 0 4px 15px rgba(100, 116, 139, 0.3);
-    }
-
-    .btn-secondary:hover {
-      background: linear-gradient(135deg, var(--secondary-hover), var(--secondary-color));
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(100, 116, 139, 0.4);
-    }
-
-    /* Table container */
-    .table-container {
-      background: var(--background-card);
-      backdrop-filter: blur(20px);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow-xl);
-      overflow: hidden;
-      margin-bottom: 2rem;
-    }
-
-    .table-wrapper {
-      overflow-x: auto;
-      max-height: 70vh;
-    }
-
-    .doctors-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.9rem;
-    }
-
-    .doctors-table th {
-      background: var(--background-table);
-      padding: 1rem;
-      text-align: left;
-      font-weight: 600;
-      color: var(--text-secondary);
-      border-bottom: 1px solid var(--border-color);
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      cursor: pointer;
-      user-select: none;
-      transition: background-color 0.3s ease;
-    }
-
-    .doctors-table th:hover {
-      background: rgba(51, 65, 85, 0.6);
-    }
-
-    .doctors-table th.sortable::after {
-      content: '\f0dc';
-      font-family: 'Font Awesome 6 Free';
-      font-weight: 900;
-      margin-left: 0.5rem;
-      opacity: 0.5;
-      font-size: 0.7rem;
-    }
-
-    .doctors-table th.sort-asc::after {
-      content: '\f0de';
-      opacity: 1;
-      color: var(--primary-color);
-    }
-
-    .doctors-table th.sort-desc::after {
-      content: '\f0dd';
-      opacity: 1;
-      color: var(--primary-color);
-    }
-
-    .doctors-table td {
-      padding: 1rem;
-      border-bottom: 1px solid var(--border-color);
-      color: var(--text-primary);
-      vertical-align: middle;
-    }
-
-    .doctors-table tbody tr {
-      transition: all 0.3s ease;
-      cursor: pointer;
-    }
-
-    .doctors-table tbody tr:hover {
-      background: rgba(37, 99, 235, 0.1);
-      transform: translateX(4px);
-    }
-
-    /* Avatar */
-    .doctor-avatar {
-      width: 2.5rem;
-      height: 2.5rem;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--primary-color), var(--success-color));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-primary);
-      font-weight: 600;
-      font-size: 0.9rem;
-      margin-right: 0.75rem;
-      flex-shrink: 0;
-    }
-
-    .doctor-info {
-      display: flex;
-      align-items: center;
-    }
-
-    .doctor-details h4 {
-      font-weight: 600;
-      color: var(--text-primary);
-      margin-bottom: 0.25rem;
-    }
-
-    .doctor-details p {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-    }
-
-    /* Specialization badges */
-    .specialization-badge {
-      padding: 0.25rem 0.75rem;
-      border-radius: var(--radius-md);
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .specialization-badge.cardiology {
-      background: rgba(220, 38, 38, 0.2);
-      color: #fca5a5;
-      border: 1px solid rgba(220, 38, 38, 0.3);
-    }
-
-    .specialization-badge.neurology {
-      background: rgba(168, 85, 247, 0.2);
-      color: #c4b5fd;
-      border: 1px solid rgba(168, 85, 247, 0.3);
-    }
-
-    .specialization-badge.orthopedics {
-      background: rgba(217, 119, 6, 0.2);
-      color: #fed7aa;
-      border: 1px solid rgba(217, 119, 6, 0.3);
-    }
-
-    .specialization-badge.pediatrics {
-      background: rgba(5, 150, 105, 0.2);
-      color: #86efac;
-      border: 1px solid rgba(5, 150, 105, 0.3);
-    }
-
-    .specialization-badge.dermatology {
-      background: rgba(8, 145, 178, 0.2);
-      color: #7dd3fc;
-      border: 1px solid rgba(8, 145, 178, 0.3);
-    }
-
-    .specialization-badge.general {
-      background: rgba(100, 116, 139, 0.2);
-      color: #cbd5e1;
-      border: 1px solid rgba(100, 116, 139, 0.3);
-    }
-
-    /* Status badges */
-    .status-badge {
-      padding: 0.25rem 0.75rem;
-      border-radius: var(--radius-md);
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .status-badge.active {
-      background: rgba(5, 150, 105, 0.2);
-      color: #86efac;
-      border: 1px solid rgba(5, 150, 105, 0.3);
-    }
-
-    .status-badge.inactive {
-      background: rgba(100, 116, 139, 0.2);
-      color: #cbd5e1;
-      border: 1px solid rgba(100, 116, 139, 0.3);
-    }
-
-    /* Action buttons */
-    .action-btn {
-      padding: 0.5rem;
-      border: none;
-      border-radius: var(--radius-md);
-      cursor: pointer;
-      transition: all 0.3s ease;
-      margin: 0 0.25rem;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 2rem;
-      height: 2rem;
-    }
-
-    .action-btn.edit {
-      background: linear-gradient(135deg, var(--info-color), #06b6d4);
-      color: var(--text-primary);
-      box-shadow: 0 2px 8px rgba(8, 145, 178, 0.3);
-    }
-
-    .action-btn.edit:hover {
-      background: linear-gradient(135deg, #0e7490, var(--info-color));
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(8, 145, 178, 0.4);
-    }
-
-    .action-btn.delete {
-      background: linear-gradient(135deg, var(--danger-color), #ef4444);
-      color: var(--text-primary);
-      box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3);
-    }
-
-    .action-btn.delete:hover {
-      background: linear-gradient(135deg, var(--danger-hover), var(--danger-color));
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
-    }
-
-    /* Empty state */
-    .empty-state {
-      text-align: center;
-      padding: 4rem 2rem;
-      color: var(--text-muted);
-    }
-
-    .empty-state-icon {
-      font-size: 4rem;
-      margin-bottom: 1rem;
-      opacity: 0.5;
-    }
-
-    .empty-state h3 {
-      font-size: 1.5rem;
-      margin-bottom: 0.5rem;
-      color: var(--text-secondary);
-    }
-
-    .empty-state p {
-      font-size: 1rem;
-      margin-bottom: 2rem;
-    }
-
-    /* Modal */
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(4px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.3s ease;
-    }
-
-    .modal-overlay.show {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .modal {
-      background: var(--background-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow-xl);
-      backdrop-filter: blur(20px);
-      padding: 2rem;
-      max-width: 500px;
-      width: 90%;
-      transform: translateY(20px);
-      transition: transform 0.3s ease;
-    }
-
-    .modal-overlay.show .modal {
-      transform: translateY(0);
-    }
-
-    .modal-header {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .modal-icon {
-      width: 3rem;
-      height: 3rem;
-      border-radius: var(--radius-lg);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-      color: var(--text-primary);
-    }
-
-    .modal-icon.danger {
-      background: linear-gradient(135deg, var(--danger-color), #ef4444);
-    }
-
-    .modal-title {
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: var(--text-primary);
-    }
-
-    .modal-content {
-      margin-bottom: 2rem;
-      color: var(--text-secondary);
-      line-height: 1.6;
-    }
-
-    .modal-actions {
-      display: flex;
-      gap: 1rem;
-      justify-content: flex-end;
-    }
-
-    .modal-btn {
-      padding: 0.75rem 1.5rem;
-      border: none;
-      border-radius: var(--radius-lg);
-      font-size: 0.9rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .modal-btn.cancel {
-      background: var(--background-table);
-      color: var(--text-secondary);
-      border: 1px solid var(--border-color);
-    }
-
-    .modal-btn.cancel:hover {
-      background: rgba(100, 116, 139, 0.3);
-      border-color: var(--border-hover);
-    }
-
-    .modal-btn.confirm {
-      background: linear-gradient(135deg, var(--danger-color), #ef4444);
-      color: var(--text-primary);
-      box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
-    }
-
-    .modal-btn.confirm:hover {
-      background: linear-gradient(135deg, var(--danger-hover), var(--danger-color));
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
-    }
-
-    /* Toast notifications */
-    .toast {
-      position: fixed;
-      top: 2rem;
-      right: 2rem;
-      background: var(--background-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-lg);
-      padding: 1rem 1.5rem;
-      box-shadow: var(--shadow-xl);
-      backdrop-filter: blur(20px);
-      transform: translateX(400px);
-      transition: transform 0.3s ease;
-      z-index: 1100;
-      max-width: 350px;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .toast.show {
-      transform: translateX(0);
-    }
-
-    .toast.success {
-      border-left: 4px solid var(--success-color);
-    }
-
-    .toast.error {
-      border-left: 4px solid var(--danger-color);
-    }
-
-    .toast-icon {
-      font-size: 1.25rem;
-    }
-
-    .toast.success .toast-icon {
-      color: var(--success-color);
-    }
-
-    .toast.error .toast-icon {
-      color: var(--danger-color);
-    }
-
-    /* Loading states */
-    .loading {
-      position: relative;
-      pointer-events: none;
-    }
-
-    .loading::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 1rem;
-      height: 1rem;
-      margin: -0.5rem 0 0 -0.5rem;
-      border: 2px solid transparent;
-      border-top: 2px solid currentColor;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    /* Responsive design */
-    @media (max-width: 1024px) {
-      .header-stats {
-        gap: 1rem;
-      }
-
-      .stat-number {
-        font-size: 1.5rem;
-      }
-    }
-
-    @media (max-width: 768px) {
-      body {
-        padding: 1rem 0.5rem;
-      }
-
-      .page-header {
-        padding: 1.5rem;
-        flex-direction: column;
-        text-align: center;
-      }
-
-      .header-content h1 {
-        font-size: 2rem;
-      }
-
-      .controls-section {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      .search-filter-group {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      .search-wrapper {
-        max-width: none;
-      }
-
-      .action-buttons {
-        justify-content: center;
-      }
-
-      .doctors-table {
-        font-size: 0.8rem;
-      }
-
-      .doctors-table th,
-      .doctors-table td {
-        padding: 0.75rem 0.5rem;
-      }
-
-      .doctor-avatar {
-        width: 2rem;
-        height: 2rem;
-        font-size: 0.8rem;
-      }
-
-      .modal {
-        margin: 1rem;
-        padding: 1.5rem;
-      }
-
-      .toast {
-        right: 1rem;
-        left: 1rem;
-        max-width: none;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .header-content h1 {
-        font-size: 1.75rem;
-      }
-
-      .breadcrumb {
-        flex-wrap: wrap;
-      }
-
-      .modal-actions {
-        flex-direction: column;
-      }
-
-      .table-wrapper {
-        max-height: 60vh;
-      }
-
-      /* Hide less important columns on mobile */
-      .doctors-table .hide-mobile {
-        display: none;
-      }
-    }
-
-    /* Focus states for accessibility */
-    .btn:focus,
-    .action-btn:focus,
-    .search-input:focus,
-    .filter-select:focus {
-      outline: 2px solid var(--primary-color);
-      outline-offset: 2px;
-    }
-
-    /* High contrast mode support */
-    @media (prefers-contrast: high) {
-      :root {
-        --background-card: rgba(0, 0, 0, 0.9);
-        --border-color: rgba(255, 255, 255, 0.5);
-      }
-    }
-
-    /* Reduced motion support */
-    @media (prefers-reduced-motion: reduce) {
-      * {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-      }
-    }
-
-    /* Screen reader only class */
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
-    }
-    .doctor-stats {
-    display: flex;
-    gap: 2rem;
-    margin-top: 1rem;
-  }
-  .stat-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    color: var(--text-secondary);
-  }
-  .stat-number {
-    font-size: 2rem;
-    font-weight: bold;
-    color: var(--primary-color);
-  }
-  .stat-label {
-    font-size: 0.875rem;
-  }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patients Management - Healthcare System</title>
+    <meta name="description" content="View and manage all patients in the healthcare system">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-hover: #1d4ed8;
+            --secondary-color: #64748b;
+            --secondary-hover: #475569;
+            --success-color: #059669;
+            --success-hover: #047857;
+            --danger-color: #dc2626;
+            --danger-hover: #b91c1c;
+            --warning-color: #d97706;
+            --info-color: #0891b2;
+            --background-color: #0f172a;
+            --surface-color: #1e293b;
+            --surface-hover: #334155;
+            --border-color: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--background-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .dashboard-container {
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+
+        .breadcrumb a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--primary-hover);
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .search-container {
+            position: relative;
+            flex: 1;
+            max-width: 400px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--surface-color);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--surface-hover);
+            color: var(--text-primary);
+        }
+
+        /* Table Container */
+        .table-container {
+            background: var(--surface-color);
+            border-radius: 1rem;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th {
+            background: var(--surface-color);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .table th:first-child {
+            padding-left: 1.5rem;
+        }
+
+        .table th:last-child {
+            padding-right: 1.5rem;
+        }
+
+        .table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .table td:first-child {
+            padding-left: 1.5rem;
+        }
+
+        .table td:last-child {
+            padding-right: 1.5rem;
+        }
+
+        .table tbody tr {
+            transition: background-color 0.2s;
+        }
+
+        .table tbody tr:hover {
+            background: var(--surface-hover);
+        }
+
+        .table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Patient Avatar */
+        .patient-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .patient-avatar {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .patient-details h4 {
+            font-weight: 500;
+            margin-bottom: 0.125rem;
+        }
+
+        .patient-id {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* Status Badge */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.375rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+
+        .status-active {
+            background: rgba(5, 150, 105, 0.1);
+            color: var(--success-color);
+            border: 1px solid rgba(5, 150, 105, 0.2);
+        }
+
+        .status-inactive {
+            background: rgba(156, 163, 175, 0.1);
+            color: var(--text-muted);
+            border: 1px solid rgba(156, 163, 175, 0.2);
+        }
+
+        .status-dot {
+            width: 0.375rem;
+            height: 0.375rem;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        /* Action Buttons */
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 0.375rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-right: 0.5rem;
+        }
+
+        .action-btn:last-child {
+            margin-right: 0;
+        }
+
+        .edit-btn {
+            background: rgba(8, 145, 178, 0.1);
+            color: var(--info-color);
+            border: 1px solid rgba(8, 145, 178, 0.2);
+        }
+
+        .edit-btn:hover {
+            background: rgba(8, 145, 178, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .delete-btn {
+            background: rgba(220, 38, 38, 0.1);
+            color: var(--danger-color);
+            border: 1px solid rgba(220, 38, 38, 0.2);
+        }
+
+        .delete-btn:hover {
+            background: rgba(220, 38, 38, 0.2);
+            transform: translateY(-1px);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--text-muted);
+        }
+
+        .empty-state h3 {
+            font-size: 1.125rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard-container {
+                padding: 1rem;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-container {
+                max-width: none;
+            }
+
+            .action-buttons {
+                justify-content: center;
+            }
+
+            .table-container {
+                overflow-x: auto;
+            }
+
+            .table {
+                min-width: 600px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <!-- Animated background -->
-  <div class="background-animation">
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-  </div>
+    <div class="dashboard-container">
+        <!-- Breadcrumb -->
+        <nav class="breadcrumb">
+            <a href="admin-dashboard.html">Admin Dashboard</a>
+            <span>/</span>
+            <a href="users.html">User Management</a>
+            <span>/</span>
+            <span>Patients List</span>
+        </nav>
 
-  <!-- Main container -->
-  <div class="container">
-    <!-- Breadcrumb -->
-    <nav class="breadcrumb" aria-label="Breadcrumb">
-      <a href="admin.html">Admin Dashboard</a>
-      <span class="breadcrumb-separator">/</span>
-      <a href="users.html">User Management</a>
-      <span class="breadcrumb-separator">/</span>
-      <span>Doctors List</span>
-    </nav>
+        <!-- Header -->
+        <div class="header">
+            <div>
+                <h1 class="page-title">Patients Management</h1>
+                <p class="page-subtitle">View, edit, and manage all patients in your healthcare system</p>
+            </div>
+        </div>
 
-    <!-- Page header -->
-    <header class="page-header">
-      <div class="header-content">
-        <h1>Doctors Management</h1>
-        <p>View, edit, and manage all doctors in your healthcare system</p>
-      </div>
-          <div class="doctor-stats">
-      <div class="stat-item">
-        <span class="stat-number" id="totalDoctors">0</span>
-        <span class="stat-label">Total Doctors</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-number" id="activeDoctors">0</span>
-        <span class="stat-label">Active Doctors</span>
-      </div>
+        <!-- Controls -->
+        <div class="controls">
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-input" placeholder="Search patients by name, ID, or phone..." id="searchInput">
+            </div>
+            <div class="action-buttons">
+                <a href="users.html" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Users
+                </a>
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th><i class="fas fa-user"></i> Patient</th>
+                        <th><i class="fas fa-birthday-cake"></i> Age</th>
+                        <th><i class="fas fa-phone"></i> Phone</th>
+                        <th><i class="fas fa-envelope"></i> Email</th>
+                        <th><i class="fas fa-circle"></i> Status</th>
+                        <th><i class="fas fa-cog"></i> Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="patientTable"></tbody>
+            </table>
+        </div>
     </div>
-      <div class="header-stats">
-        <div class="search-wrapper">
-          <i class="fas fa-search search-icon" aria-hidden="true"></i>
-          <input type="text" class="search-input" id="searchInput" placeholder="Search doctors by name, specialization, or email..." aria-label="Search doctors">
-        </div>
-        <select class="filter-select" id="specializationFilter" aria-label="Filter by specialization">
-          <option value="">All Specializations</option>
-          <option value="cardiology">Cardiology</option>
-          <option value="neurology">Neurology</option>
-          <option value="orthopedics">Orthopedics</option>
-          <option value="pediatrics">Pediatrics</option>
-          <option value="dermatology">Dermatology</option>
-          <option value="general">General Medicine</option>
-        </select>
-      </div>
-      <div class="action-buttons">
-        <a href="adddoctor.html" class="btn btn-primary">
-          <i class="fas fa-plus" aria-hidden="true"></i>
-          <span>Add Doctor</span>
-        </a>
-        <a href="users.html" class="btn btn-secondary">
-          <i class="fas fa-arrow-left" aria-hidden="true"></i>
-          <span>Back to Users</span>
-        </a>
-      </div>
-    </section>
 
-    <!-- Table container -->
-    <main class="table-container">
-      <div class="table-wrapper">
-        <table class="doctors-table" id="doctorsTable">
-          <thead>
-            <tr>
-              <th class="sortable" data-column="fullName">
-                <i class="fas fa-user" aria-hidden="true"></i>
-                Doctor
-              </th>
-              <th class="sortable" data-column="specialization">
-                <i class="fas fa-stethoscope" aria-hidden="true"></i>
-                Specialization
-              </th>
-              <th class="sortable hide-mobile" data-column="phone">
-                <i class="fas fa-phone" aria-hidden="true"></i>
-                Phone
-              </th>
-              <th class="sortable" data-column="email">
-                <i class="fas fa-envelope" aria-hidden="true"></i>
-                Email
-              </th>
-              <th class="sortable hide-mobile" data-column="experience">
-                <i class="fas fa-calendar-alt" aria-hidden="true"></i>
-                Experience
-              </th>
-              <th class="sortable hide-mobile" data-column="status">
-                <i class="fas fa-circle" aria-hidden="true"></i>
-                Status
-              </th>
-              <th>
-                <i class="fas fa-cogs" aria-hidden="true"></i>
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody id="doctorsTableBody">
-            <!-- Table rows will be inserted by JavaScript -->
-          </tbody>
-        </table>
-      </div>
-      
-      <!-- Empty state -->
-      <div class="empty-state" id="emptyState" style="display: none;">
-        <div class="empty-state-icon">
-          <i class="fas fa-user-md" aria-hidden="true"></i>
-        </div>
-        <h3>No doctors found</h3>
-        <p>No doctors match your current search criteria.</p>
-        <a href="adddoctor.html" class="btn btn-primary">
-          <i class="fas fa-plus" aria-hidden="true"></i>
-          <span>Add First Doctor</span>
-        </a>
-      </div>
-    </main>
-  </div>
+    <script>
+        const patientTable = document.getElementById("patientTable");
+        const searchInput = document.getElementById("searchInput");
 
-  <!-- Delete confirmation modal -->
-  <div class="modal-overlay" id="deleteModal">
-    <div class="modal">
-      <div class="modal-header">
-        <div class="modal-icon danger">
-          <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
-        </div>
-        <h3 class="modal-title">Confirm Deletion</h3>
-      </div>
-      <div class="modal-content">
-        <p>Are you sure you want to delete <strong id="deleteDoctorName"></strong>?</p>
-        <p>This action cannot be undone and will permanently remove the doctor from your system.</p>
-      </div>
-      <div class="modal-actions">
-        <button class="modal-btn cancel" id="cancelDelete">Cancel</button>
-        <button class="modal-btn confirm" id="confirmDelete">
-          <i class="fas fa-trash" aria-hidden="true"></i>
-          Delete Doctor
-        </button>
-      </div>
-    </div>
-  </div>
+        // Fetch patients from localStorage
+        let patients = JSON.parse(localStorage.getItem("patients")) || [];
+        let filteredPatients = [...patients];
 
-  <!-- Toast notification -->
-  <div class="toast" id="toast">
-    <div class="toast-icon"></div>
-    <div class="toast-content"></div>
-  </div>
+        // Function to generate initials from name
+        function getInitials(fullName) {
+            return fullName.split(' ').map(name => name).join('').substring(0, 2).toUpperCase();
+        }
 
-  <script>
-    class DoctorsManager {
-      constructor() {
-        this.doctors = [];
-        this.filteredDoctors = [];
-        this.sortColumn = '';
-        this.sortDirection = 'asc';
-        this.currentDeleteIndex = -1;
-        this.init();
-      }
+        // Function to generate patient ID
+        function generatePatientId(index) {
+            return `PT${String(index + 1000).padStart(6, '0')}`;
+        }
 
-      init() {
-        this.loadInitialData();
-        this.attachEventListeners();
-        this.renderTable();
-        this.updateStats();
-      }
+        // Function to render the table
+        function renderPatients() {
+            patientTable.innerHTML = "";
 
-      loadInitialData() {
-          const initialDoctors = [ /* same sample doctors as before */ ];
+            if (filteredPatients.length === 0) {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td colspan="6" class="empty-state">
+                        <i class="fas fa-user-friends"></i>
+                        <h3>No patients found</h3>
+                        <p>${patients.length === 0 ? 'Get started by adding your first patient.' : 'Try adjusting your search terms.'}</p>
+                    </td>
+                `;
+                patientTable.appendChild(row);
+                return;
+            }
 
-          // Load doctors from localStorage
-          const storedDoctors = JSON.parse(localStorage.getItem("doctors")) || [];
+            filteredPatients.forEach((patient, index) => {
+                const originalIndex = patients.indexOf(patient);
+                const initials = getInitials(patient.fullName);
+                const patientId = generatePatientId(originalIndex);
+                const status = patient.status || 'active';
+                
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>
+                        <div class="patient-info">
+                            <div class="patient-avatar">${initials}</div>
+                            <div class="patient-details">
+                                <h4>${patient.fullName}</h4>
+                                <div class="patient-id">${patientId}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${patient.age}</td>
+                    <td>${patient.phone}</td>
+                    <td>${patient.email || 'Not provided'}</td>
+                    <td>
+                        <span class="status-badge status-${status}">
+                            <span class="status-dot"></span>
+                            ${status}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="action-btn edit-btn" onclick="editPatient(${originalIndex})" title="Edit Patient">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="action-btn delete-btn" onclick="deletePatient(${originalIndex})" title="Delete Patient">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                patientTable.appendChild(row);
+            });
+        }
 
-          // If no stored doctors, use initial sample
-          if (storedDoctors.length === 0) {
-            this.doctors = initialDoctors;
-            localStorage.setItem("doctors", JSON.stringify(initialDoctors));
-          } else {
-            this.doctors = storedDoctors;
-          }
-
-          this.filteredDoctors = [...this.doctors];
-      }
-
-      attachEventListeners() {
         // Search functionality
-        const searchInput = document.getElementById('searchInput');
-        searchInput.addEventListener('input', this.debounce(() => this.handleSearch(), 300));
-
-        // Filter functionality
-        const specializationFilter = document.getElementById('specializationFilter');
-        specializationFilter.addEventListener('change', () => this.handleFilter());
-
-        // Sort functionality
-        const sortableHeaders = document.querySelectorAll('.sortable');
-        sortableHeaders.forEach(header => {
-          header.addEventListener('click', () => {
-            const column = header.dataset.column;
-            this.handleSort(column);
-          });
-        });
-
-        // Modal event listeners
-        const deleteModal = document.getElementById('deleteModal');
-        const cancelDelete = document.getElementById('cancelDelete');
-        const confirmDelete = document.getElementById('confirmDelete');
-
-        cancelDelete.addEventListener('click', () => this.hideDeleteModal());
-        confirmDelete.addEventListener('click', () => this.confirmDeleteDoctor());
-
-        // Close modal on overlay click
-        deleteModal.addEventListener('click', (e) => {
-          if (e.target === deleteModal) {
-            this.hideDeleteModal();
-          }
-        });
-
-        // Keyboard shortcuts
-        document.addEventListener('keydown', (e) => {
-          if (e.key === 'Escape') {
-            this.hideDeleteModal();
-          }
-          if (e.ctrlKey && e.key === 'f') {
-            e.preventDefault();
-            searchInput.focus();
-          }
-        });
-      }
-
-      debounce(func, wait) {
-        let timeout;
-        return function executedFunction(...args) {
-          const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-          };
-          clearTimeout(timeout);
-          timeout = setTimeout(later, wait);
-        };
-      }
-
-      handleSearch() {
-        const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
-        const specialization = document.getElementById('specializationFilter').value;
-        
-        this.filteredDoctors = this.doctors.filter(doctor => {
-          const matchesSearch = !searchTerm || 
-            doctor.fullName.toLowerCase().includes(searchTerm) ||
-            doctor.specialization.toLowerCase().includes(searchTerm) ||
-            doctor.email.toLowerCase().includes(searchTerm) ||
-            doctor.phone.includes(searchTerm);
-
-          const matchesSpecialization = !specialization || 
-            doctor.specialization.toLowerCase() === specialization.toLowerCase();
-
-          return matchesSearch && matchesSpecialization;
-        });
-
-        this.renderTable();
-      }
-
-      handleFilter() {
-        this.handleSearch(); // Reuse search logic which includes filtering
-      }
-
-      handleSort(column) {
-        // Update sort direction
-        if (this.sortColumn === column) {
-          this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
-        } else {
-          this.sortColumn = column;
-          this.sortDirection = 'asc';
+        function filterPatients() {
+            const searchTerm = searchInput.value.toLowerCase();
+            filteredPatients = patients.filter(patient => 
+                patient.fullName.toLowerCase().includes(searchTerm) ||
+                patient.phone.includes(searchTerm) ||
+                (patient.email && patient.email.toLowerCase().includes(searchTerm))
+            );
+            renderPatients();
         }
 
-        // Update header classes
-        document.querySelectorAll('.sortable').forEach(header => {
-          header.classList.remove('sort-asc', 'sort-desc');
-          if (header.dataset.column === column) {
-            header.classList.add(`sort-${this.sortDirection}`);
-          }
-        });
-
-        // Sort the filtered doctors
-        this.filteredDoctors.sort((a, b) => {
-          let aVal = a[column] || '';
-          let bVal = b[column] || '';
-
-          // Handle numeric sorting for experience
-          if (column === 'experience') {
-            aVal = parseInt(aVal) || 0;
-            bVal = parseInt(bVal) || 0;
-          } else {
-            aVal = aVal.toString().toLowerCase();
-            bVal = bVal.toString().toLowerCase();
-          }
-
-          if (this.sortDirection === 'asc') {
-            return aVal > bVal ? 1 : -1;
-          } else {
-            return aVal < bVal ? 1 : -1;
-          }
-        });
-
-        this.renderTable();
-      }
-
-      renderTable() {
-        const tbody = document.getElementById('doctorsTableBody');
-        const emptyState = document.getElementById('emptyState');
-
-        if (this.filteredDoctors.length === 0) {
-          tbody.innerHTML = '';
-          emptyState.style.display = 'block';
-          return;
+        // Edit patient function
+        function editPatient(index) {
+            // Redirect to edit page with patient index
+            window.location.href = `edit-patient.html?id=${index}`;
         }
 
-        emptyState.style.display = 'none';
-
-        tbody.innerHTML = this.filteredDoctors.map((doctor, index) => {
-          const initials = `${doctor.firstName[0]}${doctor.lastName[0]}`;
-          const specializationClass = doctor.specialization.toLowerCase().replace(/\s+/g, '');
-          
-          return `
-            <tr data-doctor-id="${doctor.id}" onclick="this.querySelector('.action-btn.edit').click()">
-              <td>
-                <div class="doctor-info">
-                  <div class="doctor-avatar">${initials}</div>
-                  <div class="doctor-details">
-                    <h4>${doctor.fullName}</h4>
-                    <p>License: ${doctor.license}</p>
-                  </div>
-                </div>
-              </td>
-              <td>
-                <span class="specialization-badge ${specializationClass}">
-                  ${this.formatSpecialization(doctor.specialization)}
-                </span>
-              </td>
-              <td class="hide-mobile">${doctor.phone}</td>
-              <td>${doctor.email}</td>
-              <td class="hide-mobile">${doctor.experience} years</td>
-              <td class="hide-mobile">
-                <span class="status-badge ${doctor.status}">
-                  ${doctor.status}
-                </span>
-              </td>
-              <td onclick="event.stopPropagation()">
-                <button class="action-btn edit" onclick="editDoctor(${index})" title="Edit doctor" aria-label="Edit ${doctor.fullName}">
-                  <i class="fas fa-edit" aria-hidden="true"></i>
-                </button>
-                <button class="action-btn delete" onclick="deleteDoctor(${index})" title="Delete doctor" aria-label="Delete ${doctor.fullName}">
-                  <i class="fas fa-trash" aria-hidden="true"></i>
-                </button>
-              </td>
-            </tr>
-          `;
-        }).join('');
-      }
-
-      formatSpecialization(specialization) {
-        const specializations = {
-          'cardiology': 'Cardiology',
-          'neurology': 'Neurology',
-          'orthopedics': 'Orthopedics',
-          'pediatrics': 'Pediatrics',
-          'dermatology': 'Dermatology',
-          'general': 'General Medicine'
-        };
-        return specializations[specialization.toLowerCase()] || specialization;
-      }
-
-      showDeleteModal(doctorIndex) {
-        this.currentDeleteIndex = doctorIndex;
-        const doctor = this.filteredDoctors[doctorIndex];
-        
-        document.getElementById('deleteDoctorName').textContent = doctor.fullName;
-        document.getElementById('deleteModal').classList.add('show');
-        
-        // Focus management for accessibility
-        document.getElementById('confirmDelete').focus();
-      }
-
-      hideDeleteModal() {
-        document.getElementById('deleteModal').classList.remove('show');
-        this.currentDeleteIndex = -1;
-      }
-
-      confirmDeleteDoctor() {
-        if (this.currentDeleteIndex === -1) return;
-
-        const doctorToDelete = this.filteredDoctors[this.currentDeleteIndex];
-        const originalIndex = this.doctors.findIndex(doc => doc.id === doctorToDelete.id);
-
-        if (originalIndex !== -1) {
-          this.doctors.splice(originalIndex, 1);
-          this.filteredDoctors.splice(this.currentDeleteIndex, 1);
-
-          // ✅ Save to localStorage
-          localStorage.setItem("doctors", JSON.stringify(this.doctors));
-
-          this.renderTable();
-          this.updateStats();
-          this.showToast(`${doctorToDelete.fullName} has been successfully deleted.`, 'success');
-        }
-
-
-        this.hideDeleteModal();
-      }
-
-      updateStats() {
-        const totalCount = this.doctors.length;
-        const activeCount = this.doctors.filter(doc => doc.status === 'active').length;
-
-        // Animate counters
-        this.animateCounter(document.getElementById('totalDoctors'), totalCount);
-        this.animateCounter(document.getElementById('activeDoctors'), activeCount);
-      }
-
-      animateCounter(element, target) {
-        let current = 0;
-        const increment = Math.ceil(target / 20);
-        const timer = setInterval(() => {
-          current += increment;
-          if (current >= target) {
-            element.textContent = target;
-            clearInterval(timer);
-          } else {
-            element.textContent = current;
-          }
-        }, 50);
-      }
-
-      showToast(message, type) {
-        const toast = document.getElementById('toast');
-        const icon = toast.querySelector('.toast-icon');
-        const content = toast.querySelector('.toast-content');
-
-        // Set icon based on type
-        if (type === 'success') {
-          icon.innerHTML = '<i class="fas fa-check-circle"></i>';
-        } else if (type === 'error') {
-          icon.innerHTML = '<i class="fas fa-exclamation-circle"></i>';
-        } else {
-          icon.innerHTML = '<i class="fas fa-info-circle"></i>';
-        }
-
-        content.textContent = message;
-        toast.className = `toast ${type}`;
-        toast.classList.add('show');
-
-        setTimeout(() => {
-          toast.classList.remove('show');
-        }, 4000);
-      }
-    }
-
-    // Global functions for onclick handlers
-    let doctorsManager;
-
-    function editDoctor(index) {
-      const doctor = doctorsManager.filteredDoctors[index];
-      doctorsManager.showToast(`Edit functionality for ${doctor.fullName} will be available soon!`, 'info');
-    }
-
-    function deleteDoctor(index) {
-      doctorsManager.showDeleteModal(index);
-    }
-
-    // Initialize the doctors manager when DOM is loaded
-    document.addEventListener('DOMContentLoaded', function() {
-      doctorsManager = new DoctorsManager();
-
-      // Add keyboard navigation for table rows
-      document.addEventListener('keydown', function(e) {
-        const activeRow = document.activeElement.closest('tr');
-        if (!activeRow) return;
-
-        const rows = Array.from(document.querySelectorAll('#doctorsTableBody tr'));
-        const currentIndex = rows.indexOf(activeRow);
-
-        switch (e.key) {
-          case 'ArrowDown':
-            e.preventDefault();
-            if (currentIndex < rows.length - 1) {
-              rows[currentIndex + 1].focus();
+        // Delete patient function
+        function deletePatient(index) {
+            const patient = patients[index];
+            if (confirm(`Are you sure you want to delete ${patient.fullName}? This action cannot be undone.`)) {
+                patients.splice(index, 1);
+                localStorage.setItem("patients", JSON.stringify(patients));
+                filteredPatients = [...patients];
+                renderPatients();
+                
+                // Show success message (you can enhance this with a toast notification)
+                alert(`${patient.fullName} has been successfully deleted.`);
             }
-            break;
-          case 'ArrowUp':
-            e.preventDefault();
-            if (currentIndex > 0) {
-              rows[currentIndex - 1].focus();
-            }
-            break;
-          case 'Enter':
-          case ' ':
-            e.preventDefault();
-            activeRow.click();
-            break;
         }
-      });
 
-      console.log('Doctors management system initialized successfully');
-    });
+        // Event listeners
+        searchInput.addEventListener('input', filterPatients);
 
-    // Handle page visibility changes to refresh data
-    document.addEventListener('visibilitychange', function() {
-      if (!document.hidden && doctorsManager) {
-        // Reload data when page becomes visible (useful for multi-tab scenarios)
-        doctorsManager.loadInitialData();
-        doctorsManager.renderTable();
-        doctorsManager.updateStats();
-      }
-    });
-
-    // Performance monitoring
-    window.addEventListener('load', function() {
-      const loadTime = performance.now();
-      console.log(`Doctors list loaded in ${Math.round(loadTime)}ms`);
-    });
-    
-  </script>
+        // Initial render
+        renderPatients();
+    </script>
 </body>
 </html>

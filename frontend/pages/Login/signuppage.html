@@ -235,6 +235,21 @@
             backdrop-filter: blur(10px);
         }
 
+        .form-select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23FFFFFF' opacity='0.5' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            padding-right: 48px;
+        }
+
+        .form-select option {
+            background: #1a1f2e;
+            color: var(--text-primary);
+            padding: 12px;
+        }
+
         .form-input::placeholder {
             color: var(--text-muted);
         }
@@ -257,9 +272,12 @@
             transform: translateY(-50%);
             color: var(--text-muted);
             font-size: 1.1rem;
+            pointer-events: none;
+            z-index: 1;
         }
 
-        .input-group .form-input {
+        .input-group .form-input,
+        .input-group .form-select {
             padding-left: 48px;
         }
 
@@ -532,6 +550,21 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="gender" class="form-label">Gender</label>
+                    <div class="input-group">
+                        <span class="input-icon">⚧</span>
+                        <select id="gender" name="gender" class="form-select" required>
+                            <option value="" disabled selected>Select your gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                            <option value="prefer-not-to-say">Prefer not to say</option>
+                        </select>
+                    </div>
+                    <div class="error-message">Please select a gender</div>
+                </div>
+
+                <div class="form-group">
                     <label for="password" class="form-label">Password</label>
                     <div class="input-group">
                         <span class="input-icon">🔒</span>
@@ -641,13 +674,21 @@
             let isValid = true;
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
             if (!email || password.length < 8) {
                 isValid = false;
-                // You can add more specific validation messages here if you want
+            }
+            
+            // Check if passwords match
+            if (password !== confirmPassword) {
+                isValid = false;
+                const confirmGroup = document.getElementById('confirmPassword').closest('.form-group');
+                confirmGroup.classList.add('error');
             }
 
             if (!isValid) {
-                alert("Please ensure all fields are filled out correctly.");
+                alert("Please ensure all fields are filled out correctly and passwords match.");
                 return; // Stop if validation fails
             }
 
@@ -658,7 +699,8 @@
                 email: formData.get('email'),
                 password: formData.get('password'),
                 age: parseInt(formData.get('age')),
-                phone: formData.get('phone')
+                phone: formData.get('phone'),
+                gender: formData.get('gender')
             };
 
             const button = document.querySelector('.signup-btn');

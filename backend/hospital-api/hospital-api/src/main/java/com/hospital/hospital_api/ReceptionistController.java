@@ -8,6 +8,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/receptionists")
+@CrossOrigin(origins = "*") // Added CrossOrigin for consistency
 public class ReceptionistController {
 
     private final ReceptionistRepository receptionistRepository;
@@ -21,8 +22,11 @@ public class ReceptionistController {
         if (receptionistRepository.findByEmail(newReceptionist.getEmail()).isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Email is already in use.");
         }
-        String generatedPassword = newReceptionist.getFullName() + "@123";
+
+        // FIX: Removes spaces from the full name for the password
+        String generatedPassword = newReceptionist.getFullName().replaceAll("\\s+", "") + "@123";
         newReceptionist.setPassword(generatedPassword);
+
         newReceptionist.setDateAdded(LocalDateTime.now());
         receptionistRepository.save(newReceptionist);
         return ResponseEntity.status(HttpStatus.CREATED).body("Receptionist added successfully.");
@@ -40,13 +44,13 @@ public class ReceptionistController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid full name or password.");
     }
 
-    // New method to get all receptionists
+    // ADDED: Method to get all receptionists
     @GetMapping
     public Iterable<Receptionist> getAllReceptionists() {
         return receptionistRepository.findAll();
     }
 
-    // New method to delete a receptionist by their ID
+    // ADDED: Method to delete a receptionist by their ID
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteReceptionist(@PathVariable Long id) {
         if (receptionistRepository.existsById(id)) {
@@ -57,4 +61,3 @@ public class ReceptionistController {
         }
     }
 }
-
