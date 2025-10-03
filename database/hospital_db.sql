@@ -1,1 +1,1 @@
-SELECT * FROM hospital_db.receptionists;
+SELECT * FROM railway.receptionists;
