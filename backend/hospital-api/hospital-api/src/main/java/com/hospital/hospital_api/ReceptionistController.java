@@ -3,12 +3,12 @@ package com.hospital.hospital_api;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate; // Correct import
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/receptionists")
-@CrossOrigin(origins = "*") // Added CrossOrigin for consistency
+@CrossOrigin(origins = "*")
 public class ReceptionistController {
 
     private final ReceptionistRepository receptionistRepository;
@@ -23,11 +23,10 @@ public class ReceptionistController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Email is already in use.");
         }
 
-        // FIX: Removes spaces from the full name for the password
         String generatedPassword = newReceptionist.getFullName().replaceAll("\\s+", "") + "@123";
         newReceptionist.setPassword(generatedPassword);
 
-        newReceptionist.setDateAdded(LocalDateTime.now());
+        newReceptionist.setDateAdded(LocalDate.now()); // Correct method call
         receptionistRepository.save(newReceptionist);
         return ResponseEntity.status(HttpStatus.CREATED).body("Receptionist added successfully.");
     }
@@ -44,13 +43,11 @@ public class ReceptionistController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid full name or password.");
     }
 
-    // ADDED: Method to get all receptionists
     @GetMapping
     public Iterable<Receptionist> getAllReceptionists() {
         return receptionistRepository.findAll();
     }
 
-    // ADDED: Method to delete a receptionist by their ID
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteReceptionist(@PathVariable Long id) {
         if (receptionistRepository.existsById(id)) {
