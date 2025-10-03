@@ -169,12 +169,7 @@
             })
             .then(receptionistData => {
                 sessionStorage.setItem('loggedInReceptionist', JSON.stringify(receptionistData));
-                // --- CORRECTED REDIRECTION PATH ---
-<<<<<<< HEAD
-                window.location.href = '/frontend/pages/Receptionist/index.html'; 
-=======
                 window.location.href = '../Receptionist/index.html'; 
->>>>>>> c17efdac2aa6dc11c58b1d7c4d060b2ec45cf061
             })
             .catch(error => {
                 console.error("Receptionist login error:", error);
@@ -182,7 +177,24 @@
             });
 
         } else if (role === 'admin') {
-            alert('Admin login is not yet implemented.');
+            fetch('http://localhost:8080/api/admins/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(loginData),
+            })
+            .then(response => {
+                if (response.ok) return response.json();
+                throw new Error('Login failed.');
+            })
+            .then(adminData => {
+                sessionStorage.setItem('loggedInAdmin', JSON.stringify(adminData));
+                window.location.href = '../Admin/admin.html'; 
+            })
+            .catch(error => {
+                console.error("Admin login error:", error);
+                errorMessage.style.display = 'block';
+            });
+
         } else {
              errorMessage.textContent = 'Please select a valid role.';
              errorMessage.style.display = 'block';
@@ -191,4 +203,3 @@
 </script>
 </body>
 </html>
-
