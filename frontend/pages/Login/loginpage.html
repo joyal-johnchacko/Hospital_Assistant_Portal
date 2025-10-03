@@ -170,7 +170,11 @@
             .then(receptionistData => {
                 sessionStorage.setItem('loggedInReceptionist', JSON.stringify(receptionistData));
                 // --- CORRECTED REDIRECTION PATH ---
+<<<<<<< HEAD
                 window.location.href = '/frontend/pages/Receptionist/index.html'; 
+=======
+                window.location.href = '../Receptionist/index.html'; 
+>>>>>>> c17efdac2aa6dc11c58b1d7c4d060b2ec45cf061
             })
             .catch(error => {
                 console.error("Receptionist login error:", error);
