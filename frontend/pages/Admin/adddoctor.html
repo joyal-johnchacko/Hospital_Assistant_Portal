@@ -207,7 +207,7 @@
           fullName: formData.get('fullName'),
           specialization: formData.get('specialization'),
           gender: formData.get('gender'),
-          age: parseInt(formData.get('age')) || 0, // This line was added
+          age: parseInt(formData.get('age')) || 0,
           phone: formData.get('phone'),
           email: formData.get('email'),
           experience: parseInt(formData.get('experience')) || 0
@@ -236,6 +236,10 @@
           submitBtn.textContent = 'Add Doctor';
           submitBtn.disabled = false;
           e.target.reset();
+          // Redirect to doctor list after 1.5 seconds
+          setTimeout(() => {
+              window.location.href = 'doctor_list.html';
+          }, 1500);
       })
       .catch(error => {
           console.error('Error:', error);

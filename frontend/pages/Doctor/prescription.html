@@ -3,452 +3,46 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Prescription Management | ABC Hospital</title>
+  <title>Prescription Management | Hospital Portal</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-      min-height: 100vh;
-      color: #334155;
-      line-height: 1.6;
-    }
-
-    .navbar {
-      background: #ffffff;
-      padding: 1.5rem 2rem;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-      border-bottom: 2px solid #e2e8f0;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .nav-content {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .logo {
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: #2563eb;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .nav-actions {
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-    }
-
-    .btn-back {
-      padding: 0.7rem 1.5rem;
-      background: #f1f5f9;
-      color: #475569;
-      text-decoration: none;
-      border-radius: 8px;
-      font-weight: 500;
-      transition: all 0.2s ease;
-      border: 1px solid #e2e8f0;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .btn-back:hover {
-      background: #e2e8f0;
-      color: #334155;
-      transform: translateY(-1px);
-    }
-
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 2rem;
-    }
-
-    .prescription-header {
-      background: #ffffff;
-      padding: 2rem;
-      border-radius: 16px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-      margin-bottom: 2rem;
-      border: 1px solid #e2e8f0;
-    }
-
-    .header-content {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 2rem;
-      align-items: start;
-    }
-
-    .patient-info {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .page-title {
-      font-size: 2.2rem;
-      font-weight: 700;
-      color: #1e293b;
-      margin-bottom: 0.5rem;
-    }
-
-    .patient-details {
-      display: flex;
-      gap: 2rem;
-      padding: 1.5rem;
-      background: #f8fafc;
-      border-radius: 12px;
-      border: 1px solid #e2e8f0;
-    }
-
-    .patient-field {
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-    }
-
-    .field-label {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: #64748b;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .field-value {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: #1e293b;
-    }
-
-    .prescription-meta {
-      text-align: right;
-      color: #64748b;
-    }
-
-    .current-date {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: #2563eb;
-      margin-bottom: 0.5rem;
-    }
-
-    .prescription-form {
-      background: #ffffff;
-      padding: 2.5rem;
-      border-radius: 16px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-      border: 1px solid #e2e8f0;
-    }
-
-    .form-section {
-      margin-bottom: 2.5rem;
-    }
-
-    .section-title {
-      font-size: 1.3rem;
-      font-weight: 600;
-      color: #1e293b;
-      margin-bottom: 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding-bottom: 0.5rem;
-      border-bottom: 2px solid #e2e8f0;
-    }
-
-    .form-group {
-      margin-bottom: 1.5rem;
-    }
-
-    .form-label {
-      display: block;
-      font-size: 1rem;
-      font-weight: 600;
-      color: #374151;
-      margin-bottom: 0.5rem;
-    }
-
-    .form-input {
-      width: 100%;
-      padding: 1rem 1.2rem;
-      border: 2px solid #e5e7eb;
-      border-radius: 8px;
-      font-size: 1rem;
-      transition: all 0.2s ease;
-      background: #ffffff;
-    }
-
-    .form-input:focus {
-      outline: none;
-      border-color: #2563eb;
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-    }
-
-    .form-textarea {
-      min-height: 120px;
-      resize: vertical;
-      font-family: inherit;
-    }
-
-    .medicines-container {
-      border: 2px solid #e5e7eb;
-      border-radius: 12px;
-      padding: 1.5rem;
-      background: #fafafa;
-    }
-
-    .medicines-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1.5rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid #e5e7eb;
-    }
-
-    .medicines-title {
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: #1e293b;
-    }
-
-    .btn-add-medicine {
-      padding: 0.6rem 1.2rem;
-      background: #10b981;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .btn-add-medicine:hover {
-      background: #059669;
-      transform: translateY(-1px);
-    }
-
-    .medicine-row {
-      display: grid;
-      grid-template-columns: 40px 2fr 1.5fr 1fr 1fr 50px;
-      gap: 1rem;
-      align-items: center;
-      padding: 1.2rem;
-      background: #ffffff;
-      border-radius: 8px;
-      margin-bottom: 1rem;
-      border: 1px solid #e5e7eb;
-      transition: all 0.2s ease;
-    }
-
-    .medicine-row:hover {
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-
-    .med-index {
-      font-weight: 700;
-      color: #2563eb;
-      font-size: 1.1rem;
-    }
-
-    .med-input {
-      padding: 0.8rem 1rem;
-      border: 1px solid #d1d5db;
-      border-radius: 6px;
-      font-size: 0.95rem;
-      transition: border-color 0.2s ease;
-    }
-
-    .med-input:focus {
-      outline: none;
-      border-color: #2563eb;
-    }
-
-    .btn-remove {
-      background: #ef4444;
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 35px;
-      height: 35px;
-      cursor: pointer;
-      font-size: 1.1rem;
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .btn-remove:hover {
-      background: #dc2626;
-      transform: scale(1.1);
-    }
-
-    .form-actions {
-      display: flex;
-      gap: 1rem;
-      justify-content: flex-end;
-      padding-top: 2rem;
-      border-top: 2px solid #e5e7eb;
-      margin-top: 2rem;
-    }
-
-    .btn {
-      padding: 1rem 2rem;
-      border: none;
-      border-radius: 8px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      text-decoration: none;
-    }
-
-    .btn-primary {
-      background: #2563eb;
-      color: white;
-    }
-
-    .btn-primary:hover {
-      background: #1d4ed8;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
-    }
-
-    .btn-secondary {
-      background: #10b981;
-      color: white;
-    }
-
-    .btn-secondary:hover {
-      background: #059669;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
-    }
-
-    .btn-outline {
-      background: transparent;
-      color: #475569;
-      border: 2px solid #e5e7eb;
-    }
-
-    .btn-outline:hover {
-      background: #f8fafc;
-      border-color: #cbd5e1;
-    }
-
-    .prescription-preview {
-      background: #f8fafc;
-      border: 2px dashed #cbd5e1;
-      border-radius: 12px;
-      padding: 2rem;
-      margin-top: 2rem;
-    }
-
-    .preview-title {
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: #374151;
-      margin-bottom: 1rem;
-      text-align: center;
-    }
-
-    .validation-error {
-      color: #ef4444;
-      font-size: 0.9rem;
-      margin-top: 0.25rem;
-    }
-
-    @media (max-width: 768px) {
-      .container {
-        padding: 1rem;
-      }
-
-      .header-content {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-      }
-
-      .patient-details {
-        flex-direction: column;
-        gap: 1rem;
-      }
-
-      .medicine-row {
-        grid-template-columns: 1fr;
-        gap: 0.8rem;
-        padding: 1rem;
-      }
-
-      .med-index {
-        grid-column: 1;
-        text-align: center;
-      }
-
-      .form-actions {
-        flex-direction: column;
-      }
-
-      .page-title {
-        font-size: 1.8rem;
-      }
-    }
-
-    .success-message {
-      background: #dcfce7;
-      color: #166534;
-      padding: 1rem 1.5rem;
-      border-radius: 8px;
-      border: 1px solid #bbf7d0;
-      margin-bottom: 1.5rem;
-      display: none;
-    }
-
-    .loading-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0,0,0,0.5);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-    }
-
-    .loading-content {
-      background: white;
-      padding: 2rem;
-      border-radius: 12px;
-      text-align: center;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); min-height: 100vh; color: #334155; }
+    .navbar { background: #ffffff; padding: 1.5rem 2rem; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border-bottom: 2px solid #e2e8f0; position: sticky; top: 0; z-index: 100; }
+    .nav-content { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+    .logo { font-size: 1.8rem; font-weight: 700; color: #2563eb; display: flex; align-items: center; gap: 0.5rem; }
+    .btn-back { padding: 0.7rem 1.5rem; background: #f1f5f9; color: #475569; text-decoration: none; border-radius: 8px; font-weight: 500; border: 1px solid #e2e8f0; display: flex; align-items: center; gap: 0.5rem; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+    .prescription-header { background: #ffffff; padding: 2rem; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin-bottom: 2rem; border: 1px solid #e2e8f0; }
+    .header-content { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; align-items: start; }
+    .page-title { font-size: 2.2rem; font-weight: 700; color: #1e293b; margin-bottom: 0.5rem; }
+    .patient-details { display: flex; gap: 2rem; padding: 1.5rem; background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; }
+    .patient-field { display: flex; flex-direction: column; }
+    .field-label { font-size: 0.85rem; font-weight: 600; color: #64748b; text-transform: uppercase; }
+    .field-value { font-size: 1.1rem; font-weight: 600; color: #1e293b; }
+    .prescription-meta { text-align: right; color: #64748b; }
+    .current-date { font-size: 1.1rem; font-weight: 600; color: #2563eb; margin-bottom: 0.5rem; }
+    .prescription-form { background: #ffffff; padding: 2.5rem; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border: 1px solid #e2e8f0; }
+    .form-section { margin-bottom: 2.5rem; }
+    .section-title { font-size: 1.3rem; font-weight: 600; color: #1e293b; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem; padding-bottom: 0.5rem; border-bottom: 2px solid #e2e8f0; }
+    .form-label { display: block; font-size: 1rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem; }
+    .form-input { width: 100%; padding: 1rem 1.2rem; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 1rem; background: #ffffff; }
+    .form-textarea { min-height: 120px; resize: vertical; font-family: inherit; }
+    .medicines-container { border: 2px solid #e5e7eb; border-radius: 12px; padding: 1.5rem; background: #fafafa; }
+    .medicines-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid #e5e7eb; }
+    .medicines-title { font-size: 1.2rem; font-weight: 600; color: #1e293b; }
+    .btn-add-medicine { padding: 0.6rem 1.2rem; background: #10b981; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; }
+    .medicine-row { display: grid; grid-template-columns: 40px 2fr 1.5fr 1fr 1fr 50px; gap: 1rem; align-items: center; padding: 1.2rem; background: #ffffff; border-radius: 8px; margin-bottom: 1rem; border: 1px solid #e5e7eb; }
+    .med-index { font-weight: 700; color: #2563eb; font-size: 1.1rem; }
+    .med-input { padding: 0.8rem 1rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.95rem; }
+    .btn-remove { background: #ef4444; color: white; border: none; border-radius: 50%; width: 35px; height: 35px; cursor: pointer; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; }
+    .form-actions { display: flex; gap: 1rem; justify-content: flex-end; padding-top: 2rem; border-top: 2px solid #e5e7eb; margin-top: 2rem; }
+    .btn { padding: 1rem 2rem; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; text-decoration: none; }
+    .btn-primary { background: #2563eb; color: white; }
+    .btn-secondary { background: #10b981; color: white; }
+    .success-message { background: #dcfce7; color: #166534; padding: 1rem 1.5rem; border-radius: 8px; border: 1px solid #bbf7d0; margin-bottom: 1.5rem; display: none; }
   </style>
 </head>
 <body>
-  <!-- Navigation -->
   <nav class="navbar">
     <div class="nav-content">
       <div class="logo">🏥 ABC Hospital</div>
@@ -457,337 +51,157 @@
       </div>
     </div>
   </nav>
-
-  <!-- Main Container -->
   <div class="container">
-    <!-- Prescription Header -->
     <div class="prescription-header">
       <div class="header-content">
         <div class="patient-info">
           <h1 class="page-title">Create Prescription</h1>
           <div class="patient-details">
-            <div class="patient-field">
-              <span class="field-label">Patient Name</span>
-              <span class="field-value" id="displayPatientName">Loading...</span>
-            </div>
-            <div class="patient-field">
-              <span class="field-label">Age</span>
-              <span class="field-value" id="displayPatientAge">--</span>
-            </div>
-            <div class="patient-field">
-              <span class="field-label">Appointment Date</span>
-              <span class="field-value" id="displayAppointmentDate">--</span>
-            </div>
+            <div class="patient-field"><span class="field-label">Patient Name</span><span class="field-value" id="displayPatientName">Loading...</span></div>
+            <div class="patient-field"><span class="field-label">Age</span><span class="field-value" id="displayPatientAge">--</span></div>
+            <div class="patient-field"><span class="field-label">Appointment Date</span><span class="field-value" id="displayAppointmentDate">--</span></div>
           </div>
         </div>
         <div class="prescription-meta">
           <div class="current-date" id="currentDate"></div>
-          <div id="currentTime"></div>
-          <div style="margin-top: 1rem; color: #64748b;">Dr. <span id="doctorName">Smith</span></div>
+          <div>Dr. <span id="doctorName">Smith</span></div>
         </div>
       </div>
     </div>
-
-    <!-- Success Message -->
-    <div id="successMessage" class="success-message">
-      ✅ Prescription saved successfully!
-    </div>
-
-    <!-- Prescription Form -->
+    <div id="successMessage" class="success-message">✅ Prescription saved successfully!</div>
     <form id="prescriptionForm" class="prescription-form">
-      <!-- Diagnosis Section -->
       <div class="form-section">
         <h3 class="section-title">🩺 Clinical Diagnosis</h3>
         <div class="form-group">
           <label for="diagnosis" class="form-label">Primary Diagnosis *</label>
-          <textarea 
-            id="diagnosis" 
-            class="form-input form-textarea" 
-            placeholder="Enter the primary diagnosis and clinical findings..."
-            required
-          ></textarea>
+          <textarea id="diagnosis" class="form-input form-textarea" placeholder="Enter the primary diagnosis..." required></textarea>
         </div>
       </div>
-
-      <!-- Medications Section -->
       <div class="form-section">
-        <h3 class="section-title">💊 Prescribed Medications</h3>
         <div class="medicines-container">
           <div class="medicines-header">
-            <span class="medicines-title">Medication List</span>
-            <button type="button" id="addMedicineBtn" class="btn-add-medicine">
-              ➕ Add Medicine
-            </button>
+            <span class="medicines-title">💊 Prescribed Medications</span>
+            <button type="button" id="addMedicineBtn" class="btn-add-medicine">➕ Add Medicine</button>
           </div>
-          <div id="medicinesList">
-            <!-- Medicine rows will be added here dynamically -->
-          </div>
+          <div id="medicinesList"></div>
         </div>
       </div>
-
-      <!-- Medical Advice Section -->
       <div class="form-section">
         <h3 class="section-title">📋 Medical Advice & Instructions</h3>
         <div class="form-group">
-          <label for="advice" class="form-label">General Advice & Follow-up Instructions</label>
-          <textarea 
-            id="advice" 
-            class="form-input form-textarea" 
-            placeholder="Provide general medical advice, lifestyle recommendations, follow-up instructions, or any additional notes for the patient..."
-          ></textarea>
+          <label for="advice" class="form-label">General Advice</label>
+          <textarea id="advice" class="form-input form-textarea" placeholder="Provide general medical advice..."></textarea>
         </div>
       </div>
-
-      <!-- Form Actions -->
       <div class="form-actions">
-        <button type="button" id="savePrescriptionBtn" class="btn btn-secondary">
-          💾 Save Prescription
-        </button>
-        <button type="submit" class="btn btn-primary">
-          🖨️ Save & Print
-        </button>
+        <button type="button" id="savePrescriptionBtn" class="btn btn-secondary">💾 Save Prescription</button>
+        <button type="submit" class="btn btn-primary">🖨️ Save & Print</button>
       </div>
     </form>
   </div>
-
-  <!-- Loading Overlay -->
-  <div id="loadingOverlay" class="loading-overlay">
-    <div class="loading-content">
-      <div style="font-size: 2rem; margin-bottom: 1rem;">⏳</div>
-      <div>Saving prescription...</div>
-    </div>
-  </div>
-
-  <script>
+ <script>
     document.addEventListener("DOMContentLoaded", () => {
-      const prescForm = document.getElementById("prescriptionForm");
-      const medicinesList = document.getElementById("medicinesList");
-      const addMedicineBtn = document.getElementById("addMedicineBtn");
-      const successMessage = document.getElementById("successMessage");
-      const loadingOverlay = document.getElementById("loadingOverlay");
-
-      let appointments = JSON.parse(localStorage.getItem("appointments")) || [];
-
-      // Load selected appointment
-      const selectedAppt = JSON.parse(localStorage.getItem("selectedAppointment"));
-      if (!selectedAppt) {
-        alert("No appointment selected. Redirecting to appointments...");
-        window.location.href = "appointments.html";
-        return;
-      }
-
-      // Display patient information
-      document.getElementById("displayPatientName").textContent = selectedAppt.patientName;
-      document.getElementById("displayPatientAge").textContent = selectedAppt.patientAge + " years";
-      
-      // Format appointment date
-      if (selectedAppt.appointmentTime) {
-        const apptDate = new Date(selectedAppt.appointmentTime);
+        const prescForm = document.getElementById("prescriptionForm");
+        const medicinesList = document.getElementById("medicinesList");
+        const addMedicineBtn = document.getElementById("addMedicineBtn");
+        const successMessage = document.getElementById("successMessage");
+        const doctorDataString = sessionStorage.getItem('loggedInDoctor');
+        const selectedApptString = sessionStorage.getItem('selectedAppointment');
+        if (!doctorDataString || !selectedApptString) {
+            alert("Could not find login or appointment data. Redirecting...");
+            window.location.href = "appointments.html";
+            return;
+        }
+        const doctorData = JSON.parse(doctorDataString);
+        const selectedAppt = JSON.parse(selectedApptString);
+        document.getElementById("displayPatientName").textContent = selectedAppt.patientName;
+        document.getElementById("displayPatientAge").textContent = selectedAppt.patientAge + " years";
+        document.getElementById("doctorName").textContent = doctorData.fullName.replace('Dr. ', '');
+        const apptDate = new Date(selectedAppt.appointmentDatetime);
         document.getElementById("displayAppointmentDate").textContent = 
-          apptDate.toLocaleDateString('en-US', {
-            weekday: 'short',
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric'
-          });
-      }
+            apptDate.toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
 
-      // Display doctor name
-      const doctorName = localStorage.getItem("doctorUsername") || "Smith";
-      document.getElementById("doctorName").textContent = doctorName;
+        async function savePrescription(shouldPrint = false) {
+            const medicines = Array.from(medicinesList.querySelectorAll(".medicine-row")).map(row => ({
+                name: row.querySelector(".med-name").value,
+                dose: row.querySelector(".med-dose").value,
+                timesPerDay: parseInt(row.querySelector(".med-times").value) || 1,
+                durationDays: parseInt(row.querySelector(".med-days").value) || 1
+            }));
+            const prescriptionData = {
+                appointmentId: selectedAppt.id,
+                patientId: selectedAppt.patientId,
+                doctorId: doctorData.id,
+                diagnosis: document.getElementById("diagnosis").value,
+                advice: document.getElementById("advice").value,
+                medicines: medicines
+            };
+            try {
+                const response = await fetch('http://localhost:8080/api/prescriptions', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(prescriptionData)
+                });
+                if (!response.ok) throw new Error('Server failed to save the prescription.');
+                const savedPrescription = await response.json();
+                successMessage.style.display = 'block';
+                setTimeout(() => { successMessage.style.display = 'none'; }, 4000);
 
-      // Update current date and time
-      function updateDateTime() {
-        const now = new Date();
-        document.getElementById("currentDate").textContent = now.toLocaleDateString('en-US', {
-          weekday: 'long',
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric'
+                if (shouldPrint) {
+                    sessionStorage.setItem('printablePrescription', JSON.stringify({
+                        ...savedPrescription,
+                        patientName: selectedAppt.patientName,
+                        patientAge: selectedAppt.patientAge,
+                        patientGender: selectedAppt.patientGender,
+                        doctorName: doctorData.fullName
+                    }));
+                    window.open('print.html', '_blank');
+                    // ONLY RESET THE FORM IF PRINTING
+                    prescForm.reset();
+                    medicinesList.innerHTML = ''; // Clear all medicine rows
+                    createMedicineRow();
+                }
+            } catch (error) {
+                console.error("Error saving prescription:", error);
+                alert("Could not save prescription. Please check the console for details.");
+            }
+        }
+        document.getElementById("savePrescriptionBtn").addEventListener("click", (e) => {
+            e.preventDefault();
+            savePrescription(false);
         });
-        document.getElementById("currentTime").textContent = now.toLocaleTimeString('en-US', {
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: true
+        prescForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            savePrescription(true);
         });
-      }
-      
-      updateDateTime();
-      setInterval(updateDateTime, 60000);
-
-      // Medicine row management
-      function createMedicineRow() {
-        const row = document.createElement("div");
-        row.className = "medicine-row";
-        row.innerHTML = `
-          <span class="med-index"></span>
-          <input type="text" placeholder="Medicine name (e.g., Paracetamol)" class="med-input med-name" required>
-          <input type="text" placeholder="Dosage (e.g., 500mg)" class="med-input med-dose" required>
-          <input type="number" placeholder="Times/day" class="med-input med-times" min="1" max="6" required>
-          <input type="number" placeholder="Days" class="med-input med-days" min="1" required>
-          <button type="button" class="btn-remove">✖</button>
-          `;
-      // Remove row functionality
-        row.querySelector(".btn-remove").addEventListener("click", () => {
-          row.remove();
-          updateMedicineNumbers();
-        });
-
-        medicinesList.appendChild(row);
-        updateMedicineNumbers();
-        
-        // Focus on the medicine name input
-        row.querySelector(".med-name").focus();
-      }
-
-      function updateMedicineNumbers() {
-        medicinesList.querySelectorAll(".medicine-row").forEach((row, index) => {
-          row.querySelector(".med-index").textContent = (index + 1) + ".";
-        });
-      }
-
-      // Add first medicine row
-      createMedicineRow();
-
-      // Add medicine button
-      addMedicineBtn.addEventListener("click", createMedicineRow);
-
-      // Show success message
-      function showSuccessMessage(message) {
-        successMessage.textContent = message;
-        successMessage.style.display = "block";
-        setTimeout(() => {
-          successMessage.style.display = "none";
-        }, 3000);
-      }
-
-      // Save prescription function
-      function savePrescription(shouldPrint = false) {
-        // Validate form
-        const diagnosis = document.getElementById("diagnosis").value.trim();
-        if (!diagnosis) {
-          alert("Please enter a diagnosis before saving the prescription.");
-          document.getElementById("diagnosis").focus();
-          return false;
+        function createMedicineRow() {
+            const row = document.createElement("div");
+            row.className = "medicine-row";
+            row.innerHTML = `
+              <span class="med-index"></span>
+              <input type="text" placeholder="Medicine name" class="med-input med-name" required>
+              <input type="text" placeholder="Dosage (e.g., 500mg)" class="med-input med-dose" required>
+              <input type="number" placeholder="Times/day" class="med-input med-times" min="1" required>
+              <input type="number" placeholder="Days" class="med-input med-days" min="1" required>
+              <button type="button" class="btn-remove">✖</button>
+            `;
+            row.querySelector(".btn-remove").addEventListener("click", () => { row.remove(); updateMedicineNumbers(); });
+            medicinesList.appendChild(row);
+            updateMedicineNumbers();
         }
-
-        const medicineRows = medicinesList.querySelectorAll(".medicine-row");
-        if (medicineRows.length === 0) {
-          alert("Please add at least one medicine to the prescription.");
-          createMedicineRow();
-          return false;
+        function updateMedicineNumbers() {
+            medicinesList.querySelectorAll(".medicine-row").forEach((row, index) => {
+                row.querySelector(".med-index").textContent = (index + 1) + ".";
+            });
         }
-
-        // Collect medicines
-        const medicines = Array.from(medicineRows).map(row => {
-        const name = row.querySelector(".med-name").value.trim();
-        const dose = row.querySelector(".med-dose").value.trim();
-        const times = row.querySelector(".med-times").value.trim();
-        const days = row.querySelector(".med-days").value.trim();
-
-        if (!name || !dose || !times || !days) {
-          throw new Error("Please fill in all medicine fields.");
+        function updateDateTime() {
+            const now = new Date();
+            document.getElementById("currentDate").textContent = now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'});
         }
-
-          return { name, dose, times, days };
-        });
-
-
-        const prescription = {
-          patientName: selectedAppt.patientName,
-          patientAge: selectedAppt.patientAge,
-          diagnosis: diagnosis,
-          medicines: medicines,
-          advice: document.getElementById("advice").value.trim(),
-          prescriptionDate: new Date().toISOString(),
-          doctorName: doctorName
-        };
-
-        // Show loading
-        if (shouldPrint) {
-          loadingOverlay.style.display = "flex";
-        }
-
-        // Update appointment with prescription
-        const apptIndex = appointments.findIndex(
-          appt => appt.patientName === selectedAppt.patientName &&
-                  appt.appointmentTime === selectedAppt.appointmentTime
-        );
-
-        if (apptIndex > -1) {
-          // Initialize prescription history if needed
-          if (!appointments[apptIndex].prescriptionsHistory) {
-            appointments[apptIndex].prescriptionsHistory = [];
-          }
-          
-          // Add to history
-          appointments[apptIndex].prescriptionsHistory.push(prescription);
-          
-          // Set as current prescription
-          appointments[apptIndex].prescription = prescription;
-          
-          // Save to localStorage
-          localStorage.setItem("appointments", JSON.stringify(appointments));
-        }
-
-        // Save current prescription for printing
-        localStorage.setItem("prescription", JSON.stringify(prescription));
-
-        if (shouldPrint) {
-          setTimeout(() => {
-            loadingOverlay.style.display = "none";
-            window.open("print.html", "_blank");
-          }, 1000);
-        } else {
-          showSuccessMessage("✅ Prescription saved successfully!");
-        }
-
-        return true;
-      }
-
-      // Save prescription button
-      document.getElementById("savePrescriptionBtn").addEventListener("click", (e) => {
-        e.preventDefault();
-        try {
-          savePrescription(false);
-        } catch (error) {
-          alert(error.message);
-        }
-      });
-
-      // Form submission (Save & Print)
-      prescForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        try {
-          savePrescription(true);
-        } catch (error) {
-          alert(error.message);
-        }
-      });
-
-      // Load existing prescription if available
-      if (selectedAppt.prescription) {
-        const existingPresc = selectedAppt.prescription;
-        document.getElementById("diagnosis").value = existingPresc.diagnosis || "";
-        document.getElementById("advice").value = existingPresc.advice || "";
-        
-        // Clear existing medicines and load saved ones
-        medicinesList.innerHTML = "";
-        if (existingPresc.medicines && existingPresc.medicines.length > 0) {
-          existingPresc.medicines.forEach(med => {
-            createMedicineRow();
-            const lastRow = medicinesList.lastElementChild;
-            lastRow.querySelector(".med-name").value = med.name;
-            lastRow.querySelector(".med-dose").value = med.dose;
-            lastRow.querySelector(".med-times").value = med.times;
-            lastRow.querySelector(".med-days").value = med.days;
-
-          });
-        } else {
-          createMedicineRow();
-        }
-      }
+        updateDateTime();
+        createMedicineRow();
+        addMedicineBtn.addEventListener("click", createMedicineRow);
     });
-  </script>
+</script>
 </body>
 </html>

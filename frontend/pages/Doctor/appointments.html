@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ABC Hospital - Appointments Management</title>
+  <title>Hospital Portal - Appointments Management</title>
   <style>
     * {
       margin: 0;
@@ -444,7 +444,7 @@
   <div class="nav-content">
     <div class="logo">🏥 ABC Hospital</div>
     <div class="nav-actions">
-      <a href="dashboard.html" class="btn-nav">🏠 Dashboard</a>
+      <a href="doc_dashboard.html" class="btn-nav">🏠 Dashboard</a>
       <a href="../Login/frontpage.html">
       <button id="logoutBtn" class="btn-logout">
         <i class="fa-solid fa-right-from-bracket"></i> Logout
@@ -529,272 +529,110 @@
     </div>
   </div>
 
-  <script>
+ <script>
     document.addEventListener("DOMContentLoaded", () => {
-      // Initialize sample appointments if none exist
-      let appointments = JSON.parse(localStorage.getItem("appointments"));
-      
-      if (!appointments || appointments.length === 0) {
-        const today = new Date();
-        const tomorrow = new Date(today);
-        tomorrow.setDate(today.getDate() + 1);
-        const yesterday = new Date(today);
-        yesterday.setDate(today.getDate() - 1);
-        const nextWeek = new Date(today);
-        nextWeek.setDate(today.getDate() + 7);
-
-        appointments = [
-          {
-            patientName: "John Smith",
-            patientAge: "45",
-            appointmentTime: today.toISOString().slice(0, 16),
-            reason: "Regular check-up and blood pressure monitoring"
-          },
-          {
-            patientName: "Sarah Johnson",
-            patientAge: "32",
-            appointmentTime: today.toISOString().slice(0, 10) + "T14:30",
-            reason: "Follow-up consultation for diabetes management"
-          },
-          {
-            patientName: "Michael Brown",
-            patientAge: "58",
-            appointmentTime: tomorrow.toISOString().slice(0, 16),
-            reason: "Chest pain evaluation and cardiac screening"
-          },
-          {
-            patientName: "Emily Davis",
-            patientAge: "28",
-            appointmentTime: yesterday.toISOString().slice(0, 16),
-            reason: "Annual physical examination and vaccination",
-            prescription: {
-              patientName: "Emily Davis",
-              patientAge: "28",
-              diagnosis: "Healthy - Annual checkup completed",
-              medicines: [
-                { name: "Multivitamin", dose: "1 tablet", times: "1" }
-              ],
-              advice: "Continue healthy lifestyle. Next checkup in 12 months."
-            },
-            prescriptionsHistory: [
-              {
-                patientName: "Emily Davis",
-                patientAge: "28",
-                diagnosis: "Healthy - Annual checkup completed",
-                medicines: [
-                  { name: "Multivitamin", dose: "1 tablet", times: "1" }
-                ],
-                advice: "Continue healthy lifestyle. Next checkup in 12 months."
-              }
-            ]
-          },
-          {
-            patientName: "Robert Wilson",
-            patientAge: "67",
-            appointmentTime: nextWeek.toISOString().slice(0, 16),
-            reason: "Hypertension management and medication review"
-          },
-          {
-            patientName: "Lisa Anderson",
-            patientAge: "41",
-            appointmentTime: today.toISOString().slice(0, 10) + "T16:00",
-            reason: "Migraine consultation and preventive care"
-          },
-          {
-            patientName: "David Martinez",
-            patientAge: "35",
-            appointmentTime: yesterday.toISOString().slice(0, 10) + "T11:00",
-            reason: "Back pain assessment and treatment options",
-            prescription: {
-              patientName: "David Martinez",
-              patientAge: "35",
-              diagnosis: "Lower back strain - muscle spasm",
-              medicines: [
-                { name: "Ibuprofen", dose: "400mg", times: "3" },
-                { name: "Muscle relaxant", dose: "10mg", times: "2" }
-              ],
-              advice: "Rest for 3-5 days. Apply heat/cold therapy. Return if no improvement."
-            },
-            prescriptionsHistory: [
-              {
-                patientName: "David Martinez",
-                patientAge: "35",
-                diagnosis: "Lower back strain - muscle spasm",
-                medicines: [
-                  { name: "Ibuprofen", dose: "400mg", times: "3" },
-                  { name: "Muscle relaxant", dose: "10mg", times: "2" }
-                ],
-                advice: "Rest for 3-5 days. Apply heat/cold therapy. Return if no improvement."
-              }
-            ]
-          }
-        ];
-        
-        localStorage.setItem("appointments", JSON.stringify(appointments));
-      }
-      
-      let filteredAppointments = [...appointments];
-
-      // Update date and time
-      function updateDateTime() {
-        const now = new Date();
-        const dateOptions = { 
-          weekday: 'long', 
-          year: 'numeric', 
-          month: 'long', 
-          day: 'numeric'
-        };
-        const timeOptions = {
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-          hour12: true
-        };
-        
-        document.getElementById("currentDate").textContent = now.toLocaleDateString('en-US', dateOptions);
-        document.getElementById("currentTime").textContent = now.toLocaleTimeString('en-US', timeOptions);
-      }
-      
-      updateDateTime();
-      setInterval(updateDateTime, 1000);
-
-      // Calculate statistics
-      function updateStatistics() {
-        const today = new Date().toISOString().split('T')[0];
-        const todayAppointments = appointments.filter(appt => {
-          if (!appt.appointmentTime) return false;
-          return appt.appointmentTime.startsWith(today);
-        });
-        
-        const completedAppointments = appointments.filter(appt => appt.prescription);
-        const pendingAppointments = appointments.filter(appt => !appt.prescription);
-
-        document.getElementById("totalAppointments").textContent = appointments.length;
-        document.getElementById("todayAppointments").textContent = todayAppointments.length;
-        document.getElementById("completedAppointments").textContent = completedAppointments.length;
-        document.getElementById("pendingAppointments").textContent = pendingAppointments.length;
-      }
-
-      // Render appointments table
-      function renderAppointments(appointmentsToRender = filteredAppointments) {
         const appointmentList = document.getElementById("appointmentList");
         const emptyState = document.getElementById("emptyState");
         
-        if (appointmentsToRender.length === 0) {
-          appointmentList.innerHTML = "";
-          emptyState.style.display = "block";
-          return;
+        const doctorDataString = sessionStorage.getItem('loggedInDoctor');
+        if (!doctorDataString) {
+            alert('You must be logged in as a doctor to view this page.');
+            window.location.href = '../Login/loginpage.html'; 
+            return;
+        }
+        const doctorData = JSON.parse(doctorDataString);
+
+        async function fetchAndRenderAppointments() {
+            try {
+                const response = await fetch(`http://localhost:8080/api/appointments/doctor/${doctorData.id}`);
+                if (!response.ok) throw new Error('Failed to fetch appointments.');
+                
+                const appointments = await response.json();
+                renderAppointments(appointments);
+                updateStatistics(appointments);
+
+            } catch (error) {
+                console.error("Error fetching appointments:", error);
+                emptyState.style.display = "block";
+            }
+        }
+
+        function renderAppointments(appointments) {
+            appointmentList.innerHTML = "";
+            if (appointments.length === 0) {
+                emptyState.style.display = "block";
+                return;
+            }
+            emptyState.style.display = "none";
+
+            appointments.forEach(appt => {
+                const appointmentDate = new Date(appt.appointmentDatetime);
+                const dateStr = appointmentDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                const timeStr = appointmentDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>
+                        <div class="patient-info">${appt.patientName}</div>
+                        <div class="patient-age">${appt.patientAge} years old</div>
+                    </td>
+                    <td>
+                        <div class="appointment-time">${timeStr}</div>
+                        <div class="appointment-date">${dateStr}</div>
+                    </td>
+                    <td>
+                        <div class="reason-text">${appt.reason || 'N/A'}</div>
+                    </td>
+                    <td>
+                        <div class="prescription-indicator no-prescription">○ Pending</div>
+                    </td>
+                    <td>
+                        <div class="actions-cell">
+                            <button class="btn-action btn-view" onclick='viewAppointment(${JSON.stringify(appt)})'>👁️ View</button>
+                            <button class="btn-action btn-delete" onclick="deleteAppointment(${appt.id})">🗑️ Delete</button>
+                        </div>
+                    </td>
+                `;
+                appointmentList.appendChild(row);
+            });
+        }
+
+        async function deleteAppointment(appointmentId) {
+            if (!confirm('Are you sure you want to delete this appointment?')) return;
+            try {
+                const response = await fetch(`http://localhost:8080/api/appointments/${appointmentId}`, { method: 'DELETE' });
+                if (!response.ok) throw new Error('Server failed to delete appointment.');
+                fetchAndRenderAppointments();
+            } catch (error) {
+                console.error("Error deleting appointment:", error);
+                alert("Could not delete the appointment.");
+            }
         }
         
-        emptyState.style.display = "none";
-        appointmentList.innerHTML = "";
-        
-        appointmentsToRender.forEach((appt, index) => {
-          const originalIndex = appointments.findIndex(a => 
-            a.patientName === appt.patientName && 
-            a.appointmentTime === appt.appointmentTime
-          );
-          
-          const appointmentDate = new Date(appt.appointmentTime);
-          const dateStr = appointmentDate.toLocaleDateString('en-US', {
-            month: 'short',
-            day: 'numeric',
-            year: 'numeric'
-          });
-          const timeStr = appointmentDate.toLocaleTimeString('en-US', {
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: true
-          });
-
-          const hasPrescription = appt.prescription;
-          const prescriptionCount = appt.prescriptionsHistory ? appt.prescriptionsHistory.length : 0;
-
-          const row = document.createElement("tr");
-          row.innerHTML = `
-            <td>
-              <div class="patient-info">${appt.patientName}</div>
-              <div class="patient-age">${appt.patientAge} years old</div>
-            </td>
-            <td>
-              <div class="appointment-time">${timeStr}</div>
-              <div class="appointment-date">${dateStr}</div>
-            </td>
-            <td>
-              <div class="reason-text">${appt.reason}</div>
-            </td>
-            <td>
-              <div class="prescription-indicator ${hasPrescription ? 'has-prescription' : 'no-prescription'}">
-                ${hasPrescription ? '✓ Prescription Written' : '○ Pending'}
-              </div>
-              ${prescriptionCount > 0 ? `<div style="font-size: 0.8rem; color: #64748b;">${prescriptionCount} total prescriptions</div>` : ''}
-            </td>
-            <td>
-              <div class="actions-cell">
-                <button class="btn-action btn-view" onclick="viewAppointment(${originalIndex})">
-                  👁️ View
-                </button>
-                <button class="btn-action btn-delete" onclick="deleteAppointment(${originalIndex})">
-                  🗑️ Delete
-                </button>
-              </div>
-            </td>
-          `;
-          appointmentList.appendChild(row);
-        });
-      }
-
-      // Filter appointments
-      function filterAppointments() {
-        const searchTerm = document.getElementById("searchInput").value.toLowerCase();
-        const dateFilter = document.getElementById("dateFilter").value;
-        const today = new Date().toISOString().split('T')[0];
-        const now = new Date();
-
-        filteredAppointments = appointments.filter(appt => {
-          // Search filter
-          const matchesSearch = appt.patientName.toLowerCase().includes(searchTerm) ||
-                               appt.reason.toLowerCase().includes(searchTerm);
-          
-          // Date filter
-          let matchesDate = true;
-          if (dateFilter === 'today') {
-            matchesDate = appt.appointmentTime && appt.appointmentTime.startsWith(today);
-          } else if (dateFilter === 'upcoming') {
-            matchesDate = appt.appointmentTime && new Date(appt.appointmentTime) > now;
-          } else if (dateFilter === 'past') {
-            matchesDate = appt.appointmentTime && new Date(appt.appointmentTime) < now;
-          }
-
-          return matchesSearch && matchesDate;
-        });
-
-        renderAppointments(filteredAppointments);
-      }
-
-      // Global functions for button actions
-      window.viewAppointment = function(index) {
-        localStorage.setItem("selectedAppointment", JSON.stringify(appointments[index]));
-        window.location.href = "prescription.html";
-      };
-
-      window.deleteAppointment = function(index) {
-        if (confirm(`Are you sure you want to delete the appointment for ${appointments[index].patientName}?`)) {
-          appointments.splice(index, 1);
-          localStorage.setItem("appointments", JSON.stringify(appointments));
-          updateStatistics();
-          filterAppointments(); // Re-filter and render
+        // --- NEW FUNCTION FOR THE VIEW BUTTON ---
+        function viewAppointment(appointmentObject) {
+            // Save the entire clicked appointment object to sessionStorage
+            sessionStorage.setItem('selectedAppointment', JSON.stringify(appointmentObject));
+            // Redirect to the prescription page
+            window.location.href = 'prescription.html';
         }
-      };
+        
+        // Make functions globally accessible
+        window.deleteAppointment = deleteAppointment;
+        window.viewAppointment = viewAppointment;
 
-      // Event listeners
-      document.getElementById("searchInput").addEventListener("input", filterAppointments);
-      document.getElementById("dateFilter").addEventListener("change", filterAppointments);
-
-      // Initial load
-      updateStatistics();
-      renderAppointments();
+        function updateStatistics(appointments) {
+            document.getElementById("totalAppointments").textContent = appointments.length;
+        }
+        
+        function updateDateTime() {
+            const now = new Date();
+            document.getElementById("currentDate").textContent = now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        }
+        
+        updateDateTime();
+        fetchAndRenderAppointments();
     });
-  </script>
+</script>
 </body>
 </html>

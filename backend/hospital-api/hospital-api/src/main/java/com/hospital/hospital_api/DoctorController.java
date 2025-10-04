@@ -49,13 +49,11 @@ public class DoctorController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid full name or password.");
     }
 
-    // New method to get all doctors
     @GetMapping
     public Iterable<Doctor> getAllDoctors() {
         return doctorRepository.findAll();
     }
 
-    // New method to delete a doctor by their ID
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteDoctor(@PathVariable Long id) {
         if (doctorRepository.existsById(id)) {
@@ -63,6 +61,17 @@ public class DoctorController {
             return ResponseEntity.ok("Doctor deleted successfully.");
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Doctor not found.");
+        }
+    }
+
+    // THIS IS THE NEWLY ADDED METHOD
+    @GetMapping("/{id}")
+    public ResponseEntity<Doctor> getDoctorById(@PathVariable Long id) {
+        Optional<Doctor> doctor = doctorRepository.findById(id);
+        if (doctor.isPresent()) {
+            return ResponseEntity.ok(doctor.get());
+        } else {
+            return ResponseEntity.notFound().build();
         }
     }
 }

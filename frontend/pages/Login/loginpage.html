@@ -150,7 +150,7 @@
             })
             .then(doctorData => {
                 sessionStorage.setItem('loggedInDoctor', JSON.stringify(doctorData));
-                window.location.href = '../Doctor/dashboard.html'; 
+                window.location.href = '../Doctor/doc_dashboard.html'; 
             })
             .catch(error => {
                 console.error("Doctor login error:", error);
