@@ -6,7 +6,8 @@ import java.util.List;
 
 @Repository
 public interface PrescriptionRepository extends CrudRepository<Prescription, Long> {
-
-    // This method will find all prescriptions for a given patient's ID
     List<Prescription> findByPatientId(Long patientId);
+
+    // Add this new method
+    List<Prescription> findByDoctorId(Long doctorId);
 }

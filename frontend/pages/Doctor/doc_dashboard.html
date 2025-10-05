@@ -253,7 +253,7 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-        // --- Part 1: Get Logged-in Doctor (Existing Code) ---
+        // --- Part 1: Get Logged-in Doctor ---
         const doctorDataString = sessionStorage.getItem('loggedInDoctor');
         if (!doctorDataString) {
             alert('You must be logged in as a doctor to view this page.');
@@ -263,51 +263,47 @@
         const doctorData = JSON.parse(doctorDataString);
         const doctorNameSpan = document.getElementById('doctorName');
         if (doctorNameSpan) {
-            // We can remove the "Dr. " prefix from the name since it's already in the HTML
             doctorNameSpan.textContent = doctorData.fullName.replace('Dr. ', '');
         }
 
-        // --- Part 2: NEW CODE to Fetch and Display Stats ---
+        // --- Part 2: Fetch and Display All Stats ---
         async function fetchDoctorStats() {
             try {
-                // Use the doctor's ID to fetch their specific appointments
-                const response = await fetch(`http://localhost:8080/api/appointments/doctor/${doctorData.id}`);
-                if (!response.ok) {
-                    throw new Error('Failed to fetch appointment data');
-                }
-                const appointments = await response.json();
+                // Fetch appointments for this doctor
+                const appointmentsResponse = await fetch(`http://localhost:8080/api/appointments/doctor/${doctorData.id}`);
+                if (!appointmentsResponse.ok) throw new Error('Failed to fetch appointments');
+                const appointments = await appointmentsResponse.json();
 
-                // Update the "Total Appointments" card with the count
-                const totalAppointmentsEl = document.getElementById('totalAppointments');
-                if (totalAppointmentsEl) {
-                    totalAppointmentsEl.textContent = appointments.length;
-                }
-                
-                // You can add logic for the other cards here in the future
-                // For example, count unique patients from the appointments list
-                const uniquePatients = new Set(appointments.map(appt => appt.patientName));
+                // Fetch prescriptions for this doctor
+                const prescriptionsResponse = await fetch(`http://localhost:8080/api/prescriptions/doctor/${doctorData.id}`);
+                if (!prescriptionsResponse.ok) throw new Error('Failed to fetch prescriptions');
+                const prescriptions = await prescriptionsResponse.json();
+
+                // --- Update the Stat Cards ---
+                document.getElementById('totalAppointments').textContent = appointments.length;
+                document.getElementById('totalPrescriptions').textContent = prescriptions.length;
+
+                // Calculate unique patients from the appointments list
+                const uniquePatients = new Set(appointments.map(appt => appt.patientId));
                 document.getElementById('totalPatients').textContent = uniquePatients.size;
 
             } catch (error) {
                 console.error("Error fetching stats:", error);
-                document.getElementById('totalAppointments').textContent = 'X'; // Show 'X' on error
+                document.getElementById('totalAppointments').textContent = 'X';
+                document.getElementById('totalPatients').textContent = 'X';
+                document.getElementById('totalPrescriptions').textContent = 'X';
             }
         }
 
-        // Call the new function to load the stats
+        // Call the function to load all stats
         fetchDoctorStats();
 
-        // --- Part 3: Date/Time Logic (Existing Code) ---
+        // --- Part 3: Date/Time Logic ---
         function updateDateTime() {
             const now = new Date();
             const options = { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: true
+                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+                hour: '2-digit', minute: '2-digit', hour12: true
             };
             document.getElementById("currentDateTime").textContent = now.toLocaleDateString('en-US', options);
         }
