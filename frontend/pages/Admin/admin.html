@@ -128,9 +128,8 @@
 
     /* Stats cards */
     .stats-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
+      display: flex;
+      justify-content: center;
       margin-bottom: 2rem;
     }
 
@@ -141,6 +140,8 @@
       padding: 1.25rem;
       text-align: center;
       transition: all 0.3s ease;
+      width: 100%;
+      max-width: 300px;
     }
 
     .stat-card:hover {
@@ -297,9 +298,8 @@
         font-size: 1.75rem;
       }
 
-      .stats-grid {
-        grid-template-columns: 1fr;
-        gap: 0.75rem;
+      .stat-card {
+        max-width: 100%;
       }
 
       .action-btn {
@@ -349,6 +349,19 @@
         transition-duration: 0.01ms !important;
       }
     }
+
+    /* Screen reader only class */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
   </style>
 </head>
 <body>
@@ -374,10 +387,6 @@
         <div class="stat-number" id="userCount">---</div>
         <div class="stat-label">Total Users</div>
       </div>
-      <div class="stat-card">
-        <div class="stat-number" id="appointmentCount">---</div>
-        <div class="stat-label">Appointments</div>
-      </div>
     </section>
 
     <!-- Action buttons -->
@@ -385,13 +394,7 @@
       <a href="users.html" class="action-btn primary" aria-describedby="users-desc">
         <i class="fas fa-users" aria-hidden="true"></i>
         <span>Manage Users</span>
-      </a>
-      
-      <a href="appointments.html" class="action-btn secondary" aria-describedby="appointments-desc">
-        <i class="fas fa-calendar-check" aria-hidden="true"></i>
-        <span>View Appointments</span>
-      </a>
-      
+      </a>  
       <a href="../Login/frontpage.html" class="action-btn danger" aria-describedby="logout-desc">
         <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
         <span>Logout</span>
@@ -410,81 +413,54 @@
 
   <!-- Hidden descriptions for screen readers -->
   <div id="users-desc" class="sr-only">View and manage all registered users in the system</div>
-  <div id="appointments-desc" class="sr-only">View and manage all appointments and schedules</div>
   <div id="logout-desc" class="sr-only">Sign out of the admin dashboard</div>
 
   <script>
-    // Simulate loading stats
-    document.addEventListener('DOMContentLoaded', function() {
-      // Animate counters
-      function animateCounter(element, target) {
-        let current = 0;
-        const increment = target / 50;
-        const timer = setInterval(() => {
-          current += increment;
-          if (current >= target) {
-            element.textContent = target.toLocaleString();
-            clearInterval(timer);
-          } else {
-            element.textContent = Math.floor(current).toLocaleString();
-          }
-        }, 30);
-      }
+    document.addEventListener('DOMContentLoaded', async () => {
+        const userCountEl = document.getElementById('userCount');
 
-      // Simulate API calls for stats
-      setTimeout(() => {
-        animateCounter(document.getElementById('userCount'), 1247);
-        animateCounter(document.getElementById('appointmentCount'), 89);
-      }, 500);
-
-      // Add loading states to buttons
-      const buttons = document.querySelectorAll('.action-btn');
-      buttons.forEach(button => {
-        button.addEventListener('click', function(e) {
-          // Only for demonstration - remove in production
-          if (this.classList.contains('primary') || this.classList.contains('secondary')) {
-            e.preventDefault();
-            this.classList.add('loading');
-            setTimeout(() => {
-              this.classList.remove('loading');
-              // Redirect would happen here
-              window.location.href = this.href;
-            }, 1000);
-          }
-        });
-      });
-
-      // Keyboard navigation enhancement
-      document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-          const activeElement = document.activeElement;
-          if (activeElement && activeElement.classList.contains('action-btn')) {
-            activeElement.blur();
-          }
+        // UPDATED: This function will now animate much faster
+        function animateCounter(element, target) {
+            let current = 0;
+            // We reduced the number of steps from 50 to 10 for a faster animation
+            const increment = target / 10 > 1 ? target / 10 : 1; 
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    element.textContent = target.toLocaleString();
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(current).toLocaleString();
+                }
+            }, 20); // Reduced delay to 20ms
         }
-      });
-    });
 
-    // Error handling for failed navigation
-    window.addEventListener('error', function(e) {
-      console.error('Navigation error:', e);
-      // Could show user-friendly error message here
-    });
-  </script>
+        try {
+            const response = await fetch('http://localhost:8080/api/dashboard/stats');
+            if (!response.ok) throw new Error('Could not fetch stats');
+            
+            const stats = await response.json();
+            animateCounter(userCountEl, stats.totalUsers);
 
-  <!-- Screen reader only class -->
-  <style>
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
-    }
-  </style>
+        } catch (error) {
+            console.error("Failed to fetch stats:", error);
+            userCountEl.textContent = 'Error';
+        }
+        
+        const buttons = document.querySelectorAll('.action-btn');
+        buttons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                if (!this.classList.contains('danger')) {
+                    e.preventDefault();
+                    this.classList.add('loading');
+                    setTimeout(() => {
+                        this.classList.remove('loading');
+                        window.location.href = this.href;
+                    }, 700);
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>

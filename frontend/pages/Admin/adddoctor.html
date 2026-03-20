@@ -42,7 +42,6 @@
       border-radius: var(--radius-lg); color: var(--text-primary); font-size: 1rem; outline: none;
     }
     
-    /* RESTORED SPECIALIZATION STYLES */
     .specialization-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
@@ -61,7 +60,6 @@
       border-color: var(--primary-color); color: var(--text-primary);
       transform: translateY(-2px); box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
     }
-    /* END OF RESTORED STYLES */
 
     .form-actions { display: flex; gap: 1rem; margin-top: 1rem; }
     .btn {
@@ -127,6 +125,33 @@
             </div>
           </div>
         </div>
+
+        <div class="form-group">
+          <label class="form-label">Gender</label>
+          <div class="specialization-grid">
+            <div class="specialization-option">
+              <input type="radio" id="male" name="gender" value="Male" class="specialization-input" required>
+              <label for="male" class="specialization-label">Male</label>
+            </div>
+            <div class="specialization-option">
+              <input type="radio" id="female" name="gender" value="Female" class="specialization-input">
+              <label for="female" class="specialization-label">Female</label>
+            </div>
+            <div class="specialization-option">
+              <input type="radio" id="other" name="gender" value="Other" class="specialization-input">
+              <label for="other" class="specialization-label">Other</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="age" class="form-label">Age</label>
+          <div class="input-wrapper">
+            <i class="fas fa-user-clock input-icon"></i>
+            <input type="number" id="age" name="age" class="form-input" placeholder="Enter age" min="25" max="80" required>
+          </div>
+        </div>
+
         <div class="form-group">
           <label for="phone" class="form-label">Phone Number</label>
           <div class="input-wrapper">
@@ -134,6 +159,7 @@
             <input type="tel" id="phone" name="phone" class="form-input" placeholder="Enter phone number" required>
           </div>
         </div>
+
         <div class="form-group">
           <label for="email" class="form-label">Email Address</label>
           <div class="input-wrapper">
@@ -141,6 +167,7 @@
             <input type="email" id="email" name="email" class="form-input" placeholder="Enter email address" required>
           </div>
         </div>
+
         <div class="form-group">
           <label for="experience" class="form-label">Experience (Years)</label>
           <div class="input-wrapper">
@@ -148,9 +175,10 @@
             <input type="number" id="experience" name="experience" class="form-input" placeholder="e.g., 5" min="0" max="50">
           </div>
         </div>
+
         <div class="form-actions">
           <button type="submit" class="btn btn-primary" id="submitBtn">Add Doctor</button>
-          <a href="admin.html" class="btn btn-secondary">Cancel</a>
+          <a href="admin.html" class="btn btn-secondary">Back</a>
         </div>
       </form>
     </div>
@@ -167,8 +195,9 @@
       // Basic validation
       const fullName = document.getElementById('fullName').value;
       const specialization = this.querySelector('input[name="specialization"]:checked');
-      if (!fullName || !specialization) {
-          alert('Full Name and Specialization are required.');
+      const gender = this.querySelector('input[name="gender"]:checked');
+      if (!fullName || !specialization || !gender) {
+          alert('Full Name, Specialization, and Gender are required.');
           return;
       }
 
@@ -177,6 +206,8 @@
       const doctorData = {
           fullName: formData.get('fullName'),
           specialization: formData.get('specialization'),
+          gender: formData.get('gender'),
+          age: parseInt(formData.get('age')) || 0,
           phone: formData.get('phone'),
           email: formData.get('email'),
           experience: parseInt(formData.get('experience')) || 0
@@ -205,6 +236,10 @@
           submitBtn.textContent = 'Add Doctor';
           submitBtn.disabled = false;
           e.target.reset();
+          // Redirect to doctor list after 1.5 seconds
+          setTimeout(() => {
+              window.location.href = 'doctor_list.html';
+          }, 1500);
       })
       .catch(error => {
           console.error('Error:', error);

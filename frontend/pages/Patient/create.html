@@ -10,9 +10,9 @@
 <body class="page-create-appointment">
 
   <nav class="navbar">
-    <div class="logo">🏥 ABC Hospital</div>
+    <div class="logo">🏥 Hospital Portal</div>
     <ul class="nav-links">
-      <li><a href="dashboard.html" class="btn-back">← Back to Admin Dashboard</a></li>
+      <li><a href="dashboard.html" class="btn-back">← Back to Dashboard</a></li>
     </ul>
   </nav>
 
@@ -20,16 +20,17 @@
     <div class="appointment-card">
       <div class="card-header">
         <h2><i class="fas fa-calendar-plus"></i> Create Appointment</h2>
-        <p>Schedule a new appointment for patient consultation</p>
+        <p>Schedule a new appointment for your consultation</p>
       </div>
 
       <form id="appointmentForm">
         <div class="form-grid">
+          
           <div class="input-group">
             <label for="patientName">Patient Name</label>
             <div class="input-wrapper">
               <span class="icon"><i class="fa fa-user"></i></span>
-              <input type="text" id="patientName" name="patientName" placeholder="Enter patient name" required>
+              <input type="text" id="patientName" name="patientName" readonly required>
             </div>
           </div>
 
@@ -37,10 +38,9 @@
             <label for="patientAge">Patient Age</label>
             <div class="input-wrapper">
               <span class="icon"><i class="fa fa-cake-candles"></i></span>
-              <input type="number" id="patientAge" name="patientAge" placeholder="Enter patient's age" min="0" max="120" required>
+              <input type="number" id="patientAge" name="patientAge" readonly required>
             </div>
           </div>
-
           <div class="input-group">
             <label for="appointmentDate">Appointment Date</label>
             <div class="input-wrapper">
@@ -55,67 +55,111 @@
               <span class="icon"><i class="fa fa-clock"></i></span>
               <select id="appointmentTime" name="appointmentTime" required>
                 <option value="">Select time slot</option>
-                <option value="09:00">09:00 AM</option>
-                <option value="09:15">09:15 AM</option>
-                <option value="09:30">09:30 AM</option>
-                <option value="09:45">09:45 AM</option>
-                <option value="10:00">10:00 AM</option>
-                <option value="10:15">10:15 AM</option>
-                <option value="10:30">10:30 AM</option>
-                <option value="10:45">10:45 AM</option>
-                <option value="11:00">11:00 AM</option>
-                <option value="11:15">11:15 AM</option>
-                <option value="11:30">11:30 AM</option>
-                <option value="11:45">11:45 AM</option>
-                <option value="12:00">12:00 PM</option>
-                <option value="12:15">12:15 PM</option>
-                <option value="12:30">12:30 PM</option>
-                <option value="12:45">12:45 PM</option>
-                <option value="13:00">01:00 PM</option>
-                <option value="13:15">01:15 PM</option>
-                <option value="13:30">01:30 PM</option>
-                <option value="13:45">01:45 PM</option>
-                <option value="14:00">02:00 PM</option>
-                <option value="14:15">02:15 PM</option>
-                <option value="14:30">02:30 PM</option>
-                <option value="14:45">02:45 PM</option>
-                <option value="15:00">03:00 PM</option>
-                <option value="15:15">03:15 PM</option>
-                <option value="15:30">03:30 PM</option>
-                <option value="15:45">03:45 PM</option>
-                <option value="16:00">04:00 PM</option>
-                <option value="16:15">04:15 PM</option>
-                <option value="16:30">04:30 PM</option>
-                <option value="16:45">04:45 PM</option>
-                <option value="17:00">05:00 PM</option>
+                <option value="09:00">09:00 AM</option><option value="10:00">10:00 AM</option>
+                <option value="11:00">11:00 AM</option><option value="12:00">12:00 PM</option>
+                <option value="13:00">01:00 PM</option><option value="14:00">02:00 PM</option>
               </select>
             </div>
           </div>
 
-          <div class="input-group full-width">
-            <label for="reason">Reason for Visit</label>
+          <div class="input-group">
+            <label for="doctorId">Doctor</label>
             <div class="input-wrapper">
-              <span class="icon"><i class="fa fa-notes-medical"></i></span>
-              <input type="text" id="reason" name="reason" placeholder="Enter reason for visit" required>
+              <span class="icon"><i class="fa fa-user-doctor"></i></span>
+              <select id="doctorId" name="doctorId" required>
+                <option value="">Select Doctor</option>
+              </select>
             </div>
           </div>
         </div>
 
         <div class="form-actions">
-          <button type="submit" class="btn-save">
-            <i class="fas fa-plus"></i> Save Appointment
-          </button>
+          <button type="submit" class="btn-save"><i class="fas fa-plus"></i> Save Appointment</button>
         </div>
       </form>
     </div>
   </main>
 
-  <!-- Success message container -->
-  <div id="successMessage" class="success-message">
+  <div id="successMessage" class="success-message" style="display:none;">
     <i class="fas fa-check-circle"></i>
     <span>Appointment booked successfully!</span>
   </div>
+  
+  <script>
+    let loggedInPatient = null; // Variable to hold patient data
 
-  <script src="script.js"></script>
+    // SCRIPT TO GET PATIENT DATA AND POPULATE DOCTORS
+    document.addEventListener('DOMContentLoaded', async () => {
+        // 1. Get Logged-in Patient and Autofill
+        const patientDataString = sessionStorage.getItem('loggedInPatient');
+        if (!patientDataString) {
+            alert('You must be logged in as a patient to book an appointment.');
+            window.location.href = '../Login/loginpage.html';
+            return;
+        }
+        loggedInPatient = JSON.parse(patientDataString);
+
+        // Autofill patient name and age and make them read-only
+        document.getElementById('patientName').value = loggedInPatient.fullName;
+        document.getElementById('patientAge').value = loggedInPatient.age;
+
+        // 2. Populate Doctor Dropdown
+        const doctorSelect = document.getElementById('doctorId');
+        try {
+            const response = await fetch('http://localhost:8080/api/doctors');
+            if (!response.ok) throw new Error('Could not fetch doctors');
+            const doctors = await response.json();
+            
+            doctors.forEach(doctor => {
+                const option = document.createElement('option');
+                option.value = doctor.id;
+                option.textContent = `${doctor.fullName} (${doctor.specialization})`;
+                doctorSelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Error populating doctors:', error);
+        }
+    });
+
+    // SCRIPT TO HANDLE FORM SUBMISSION
+    document.getElementById('appointmentForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const form = e.target;
+        const date = form.appointmentDate.value;
+        const time = form.appointmentTime.value;
+        const appointmentDatetime = `${date}T${time}:00`;
+
+        const appointmentData = {
+            patientId: loggedInPatient.id, // Use the ID of the logged-in patient
+            patientName: loggedInPatient.fullName, // Still send the name for display
+            patientAge: loggedInPatient.age, // Still send the age for display
+            appointmentDatetime: appointmentDatetime,
+            doctorId: parseInt(form.doctorId.value)
+        };
+
+        try {
+            const response = await fetch('http://localhost:8080/api/appointments', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(appointmentData),
+            });
+            if (!response.ok) throw new Error('Failed to create appointment.');
+            
+            const successMessage = document.getElementById('successMessage');
+            successMessage.style.display = 'flex';
+            setTimeout(() => { successMessage.style.display = 'none'; }, 3000);
+            form.reset();
+            // Re-fill the read-only fields after reset
+            document.getElementById('patientName').value = loggedInPatient.fullName;
+            document.getElementById('patientAge').value = loggedInPatient.age;
+
+        } catch (error) {
+            console.error('Error creating appointment:', error);
+            alert('Error: Could not save the appointment.');
+        }
+    });
+  </script>
+
 </body>
 </html>

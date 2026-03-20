@@ -8,7 +8,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/patients")
-@CrossOrigin(origins = "*")
 public class PatientController {
 
     private final PatientRepository patientRepository;
@@ -19,15 +18,40 @@ public class PatientController {
 
     @PostMapping("/signup")
     public ResponseEntity<String> signupPatient(@RequestBody Patient newPatient) {
-        Optional<Patient> existingPatient = patientRepository.findByEmail(newPatient.getEmail());
-
-        if (existingPatient.isPresent()) {
+        if (patientRepository.findByEmail(newPatient.getEmail()).isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Email already in use.");
         }
-
         newPatient.setCreatedAt(LocalDateTime.now());
         patientRepository.save(newPatient);
-
         return ResponseEntity.status(HttpStatus.CREATED).body("Patient account created successfully.");
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> loginPatient(@RequestBody Patient loginRequest) {
+        Optional<Patient> patientOptional = patientRepository.findByFullName(loginRequest.getFullName());
+        if (patientOptional.isPresent()) {
+            Patient patient = patientOptional.get();
+            if (patient.getPassword().equals(loginRequest.getPassword())) {
+                return ResponseEntity.ok(patient);
+            }
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid full name or password.");
+    }
+
+    // NEW METHOD to get all patients
+    @GetMapping
+    public Iterable<Patient> getAllPatients() {
+        return patientRepository.findAll();
+    }
+
+    // NEW METHOD to delete a patient by their ID
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deletePatient(@PathVariable Long id) {
+        if (patientRepository.existsById(id)) {
+            patientRepository.deleteById(id);
+            return ResponseEntity.ok("Patient deleted successfully.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Patient not found.");
+        }
     }
 }

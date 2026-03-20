@@ -210,7 +210,7 @@
 <body>
   <!-- Navbar -->
   <nav class="navbar">
-    <div class="logo">🏥 ABC Hospital</div>
+    <div class="logo">🏥 Hospital Portal</div>
   </nav>
 
   <!-- Main Container -->
@@ -253,46 +253,63 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      // 1. Get the logged-in doctor's data from sessionStorage
-      const doctorDataString = sessionStorage.getItem('loggedInDoctor');
+        // --- Part 1: Get Logged-in Doctor ---
+        const doctorDataString = sessionStorage.getItem('loggedInDoctor');
+        if (!doctorDataString) {
+            alert('You must be logged in as a doctor to view this page.');
+            window.location.href = '../Login/loginpage.html'; 
+            return;
+        }
+        const doctorData = JSON.parse(doctorDataString);
+        const doctorNameSpan = document.getElementById('doctorName');
+        if (doctorNameSpan) {
+            doctorNameSpan.textContent = doctorData.fullName.replace('Dr. ', '');
+        }
 
-      // 2. Security Check: If no data is found, redirect to the login page
-      if (!doctorDataString) {
-        alert('You must be logged in as a doctor to view this page.');
-        // Adjust the path if your login page is elsewhere
-        window.location.href = '../Login/loginpage.html'; 
-        return; // Stop the script from running further
-      }
+        // --- Part 2: Fetch and Display All Stats ---
+        async function fetchDoctorStats() {
+            try {
+                // Fetch appointments for this doctor
+                const appointmentsResponse = await fetch(`http://localhost:8080/api/appointments/doctor/${doctorData.id}`);
+                if (!appointmentsResponse.ok) throw new Error('Failed to fetch appointments');
+                const appointments = await appointmentsResponse.json();
 
-      // 3. If data exists, convert it from a string back into a usable object
-      const doctorData = JSON.parse(doctorDataString);
+                // Fetch prescriptions for this doctor
+                const prescriptionsResponse = await fetch(`http://localhost:8080/api/prescriptions/doctor/${doctorData.id}`);
+                if (!prescriptionsResponse.ok) throw new Error('Failed to fetch prescriptions');
+                const prescriptions = await prescriptionsResponse.json();
 
-      // 4. Update the welcome message with the doctor's actual full name
-      const doctorNameSpan = document.getElementById('doctorName');
-      if (doctorNameSpan) {
-        doctorNameSpan.textContent = doctorData.fullName;
-      }
+                // --- Update the Stat Cards ---
+                document.getElementById('totalAppointments').textContent = appointments.length;
+                document.getElementById('totalPrescriptions').textContent = prescriptions.length;
 
-      // --- The rest of your original dashboard logic can remain below ---
-      // For example, the code to update the date and time, and animate stats.
-      // (This example just focuses on the login part)
-      function updateDateTime() {
-        const now = new Date();
-        const options = { 
-          weekday: 'long', 
-          year: 'numeric', 
-          month: 'long', 
-          day: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: true
-        };
-        document.getElementById("currentDateTime").textContent = now.toLocaleDateString('en-US', options);
-      }
-      updateDateTime();
-      setInterval(updateDateTime, 60000);
-      
+                // Calculate unique patients from the appointments list
+                const uniquePatients = new Set(appointments.map(appt => appt.patientId));
+                document.getElementById('totalPatients').textContent = uniquePatients.size;
+
+            } catch (error) {
+                console.error("Error fetching stats:", error);
+                document.getElementById('totalAppointments').textContent = 'X';
+                document.getElementById('totalPatients').textContent = 'X';
+                document.getElementById('totalPrescriptions').textContent = 'X';
+            }
+        }
+
+        // Call the function to load all stats
+        fetchDoctorStats();
+
+        // --- Part 3: Date/Time Logic ---
+        function updateDateTime() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+                hour: '2-digit', minute: '2-digit', hour12: true
+            };
+            document.getElementById("currentDateTime").textContent = now.toLocaleDateString('en-US', options);
+        }
+        updateDateTime();
+        setInterval(updateDateTime, 60000);
     });
-  </script>
+</script>
 </body>
 </html>

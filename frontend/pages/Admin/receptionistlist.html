@@ -4,114 +4,110 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Receptionists Management - Healthcare System</title>
-    <meta name="description" content="View and manage all receptionists in the healthcare system">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary-color: #2563eb;
-            --primary-hover: #1d4ed8;
-            --secondary-color: #64748b;
-            --secondary-hover: #475569;
-            --success-color: #059669;
-            --danger-color: #dc2626;
-            --warning-color: #d97706;
-            --info-color: #0891b2;
-            --background-color: #0f172a;
-            --surface-color: #1e293b;
-            --surface-hover: #334155;
-            --border-color: #334155;
-            --text-primary: #f8fafc;
-            --text-secondary: #cbd5e1;
+            --primary-color: #2563eb; --primary-hover: #1d4ed8; --secondary-color: #64748b;
+            --success-color: #059669; --danger-color: #dc2626; --danger-hover: #b91c1c;
+            --background-color: #0f172a; --surface-color: #1e293b; --surface-hover: #334155;
+            --border-color: #334155; --text-primary: #f8fafc; --text-secondary: #cbd5e1;
             --text-muted: #94a3b8;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Inter', sans-serif;
-            background: var(--background-color);
-            color: var(--text-primary);
-            line-height: 1.6;
+            font-family: 'Inter', sans-serif; background: var(--background-color);
+            color: var(--text-primary); line-height: 1.6;
         }
         .dashboard-container { min-height: 100vh; padding: 2rem; }
         .header { margin-bottom: 2rem; }
-        .breadcrumb { display: flex; align-items: center; gap: 0.5rem; color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 1rem; }
-        .breadcrumb a { color: var(--primary-color); text-decoration: none; transition: color 0.2s; }
-        .breadcrumb a:hover { color: var(--primary-hover); }
         .page-title { font-size: 2.5rem; font-weight: 700; color: var(--primary-color); margin-bottom: 0.5rem; }
         .page-subtitle { color: var(--text-secondary); font-size: 1rem; margin-bottom: 2rem; }
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
-        .stat-card { background: var(--surface-color); border: 1px solid var(--border-color); border-radius: 1rem; padding: 1.5rem; }
+        .stat-card { background: var(--surface-color); border: 1px solid var(--border-color); border-radius: 1rem; padding: 1.5rem; margin-bottom: 2rem; }
         .stat-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-        .stat-card-title { font-size: 0.875rem; color: var(--text-secondary); font-weight: 500; }
+        .stat-card-title { color: var(--text-secondary); }
         .stat-card-icon { width: 2.5rem; height: 2.5rem; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
-        .stat-card-value { font-size: 2rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem; }
-        .stat-card-change { font-size: 0.75rem; }
+        .stat-card-value { font-size: 2rem; font-weight: 700; }
         .icon-primary { background: rgba(37, 99, 235, 0.1); color: var(--primary-color); }
         .controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
         .search-container { position: relative; min-width: 300px; flex: 1; }
-        .search-input { width: 100%; padding: 0.75rem 1rem 0.75rem 2.5rem; background: var(--surface-color); border: 1px solid var(--border-color); border-radius: 0.5rem; color: var(--text-primary); font-size: 0.875rem; transition: all 0.2s; }
-        .search-input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
+        .search-input { width: 100%; padding: 0.75rem 1rem 0.75rem 2.5rem; background: var(--surface-color); border: 1px solid var(--border-color); border-radius: 0.5rem; color: var(--text-primary); }
         .search-icon { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
         .action-buttons { display: flex; gap: 0.75rem; }
-        .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.25rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 500; text-decoration: none; border: none; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+        .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.25rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 500; text-decoration: none; border: none; cursor: pointer; }
         .btn-primary { background: var(--primary-color); color: white; }
         .btn-primary:hover { background: var(--primary-hover); }
         .btn-secondary { background: var(--surface-color); color: var(--text-secondary); border: 1px solid var(--border-color); }
         .btn-secondary:hover { background: var(--surface-hover); color: var(--text-primary); }
         .table-container { background: var(--surface-color); border-radius: 1rem; border: 1px solid var(--border-color); overflow: hidden; }
         .table { width: 100%; border-collapse: collapse; }
-        .table th { background: var(--surface-color); padding: 1rem; text-align: left; font-weight: 600; color: var(--text-secondary); font-size: 0.875rem; text-transform: uppercase; border-bottom: 1px solid var(--border-color); }
-        .table th:first-child, .table td:first-child { padding-left: 1.5rem; }
-        .table th:last-child, .table td:last-child { padding-right: 1.5rem; }
+        .table th { padding: 1rem; text-align: left; font-weight: 600; color: var(--text-secondary); font-size: 0.875rem; text-transform: uppercase; border-bottom: 1px solid var(--border-color); }
         .table td { padding: 1rem; border-bottom: 1px solid var(--border-color); color: var(--text-primary); }
         .table tbody tr:hover { background: var(--surface-hover); }
         .table tbody tr:last-child td { border-bottom: none; }
         .staff-info { display: flex; align-items: center; gap: 0.75rem; }
-        .staff-avatar { width: 2.5rem; height: 2.5rem; border-radius: 50%; background: var(--primary-color); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 0.875rem; }
+        .staff-avatar { width: 2.5rem; height: 2.5rem; border-radius: 50%; background: var(--primary-color); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; }
         .staff-details h4 { font-weight: 500; }
         .staff-id { font-size: 0.75rem; color: var(--text-muted); }
-        .action-btn { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; border-radius: 0.375rem; border: none; cursor: pointer; transition: all 0.2s; margin-right: 0.5rem; }
+        .action-btn { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; border-radius: 0.375rem; border: none; cursor: pointer; }
         .delete-btn { background: rgba(220, 38, 38, 0.1); color: var(--danger-color); border: 1px solid rgba(220, 38, 38, 0.2); }
         .delete-btn:hover { background: rgba(220, 38, 38, 0.2); }
         .empty-state { text-align: center; padding: 3rem; color: var(--text-secondary); }
         .empty-state i { font-size: 3rem; margin-bottom: 1rem; color: var(--text-muted); }
-        .empty-state h3 { font-size: 1.125rem; margin-bottom: 0.5rem; color: var(--text-primary); }
-        @media (max-width: 768px) {
-            .dashboard-container { padding: 1rem; }
-            .page-title { font-size: 2rem; }
-            .controls { flex-direction: column; align-items: stretch; }
-            .search-container { min-width: auto; }
-            .table-container { overflow-x: auto; }
-            .table { min-width: 800px; }
+
+        /* MODAL AND TOAST STYLES */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(5px);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
         }
+        .modal-overlay.show { opacity: 1; pointer-events: auto; }
+        .modal-content {
+            background: var(--surface-color); border: 1px solid var(--border-color);
+            border-radius: 1rem; padding: 2rem; width: 100%; max-width: 400px;
+            text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            transform: scale(0.95); transition: transform 0.3s ease;
+        }
+        .modal-overlay.show .modal-content { transform: scale(1); }
+        .modal-icon {
+            width: 3.5rem; height: 3.5rem; border-radius: 50%; background: rgba(220, 38, 38, 0.1);
+            color: var(--danger-color); display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; margin: 0 auto 1.5rem; border: 1px solid rgba(220, 38, 38, 0.2);
+        }
+        .modal-title { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .modal-body { color: var(--text-secondary); margin-bottom: 2rem; }
+        .modal-actions { display: flex; gap: 1rem; }
+        .modal-actions .btn { flex: 1; }
+        .btn-danger { background: var(--danger-color); color: white; }
+        .btn-danger:hover { background: var(--danger-hover); }
+        
+        .toast {
+            position: fixed; top: 2rem; right: 2rem; background: var(--surface-color);
+            border-left: 4px solid var(--success-color); border-radius: 0.5rem;
+            padding: 1rem 1.5rem; box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            transform: translateX(120%); opacity: 0; transition: all 0.4s ease;
+            z-index: 1001; display: flex; align-items: center; gap: 1rem;
+        }
+        .toast.show { transform: translateX(0); opacity: 1; }
+        .toast.success { border-left-color: var(--success-color); }
+        .toast.error { border-left-color: var(--danger-color); }
+        .toast-icon { font-size: 1.25rem; }
     </style>
 </head>
 <body>
     <div class="dashboard-container">
-        <nav class="breadcrumb">
-            <a href="admin-dashboard.html">Admin Dashboard</a><span>/</span>
-            <a href="users.html">User Management</a><span>/</span>
-            <span>Receptionists List</span>
-        </nav>
-
         <div class="header">
             <h1 class="page-title">Receptionists Management</h1>
             <p class="page-subtitle">View, edit, and manage all reception staff in your healthcare system</p>
         </div>
-
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-card-header">
-                    <span class="stat-card-title">Total Receptionists</span>
-                    <div class="stat-card-icon icon-primary"><i class="fas fa-users"></i></div>
-                </div>
-                <div class="stat-card-value" id="totalReceptionists">0</div>
-                <div class="stat-card-change"><span>All registered reception staff</span></div>
+        <div class="stat-card">
+            <div class="stat-card-header">
+                <span class="stat-card-title">Total Receptionists</span>
+                <div class="stat-card-icon icon-primary"><i class="fas fa-users"></i></div>
             </div>
+            <div class="stat-card-value" id="totalReceptionists">0</div>
         </div>
-
         <div class="controls">
             <div class="search-container">
                 <i class="fas fa-search search-icon"></i>
@@ -122,21 +118,32 @@
                 <a href="users.html" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back to Users</a>
             </div>
         </div>
-
         <div class="table-container">
             <table class="table">
                 <thead>
                     <tr>
-                        <th><i class="fas fa-user"></i> Receptionist</th>
-                        <th><i class="fas fa-phone"></i> Phone</th>
-                        <th><i class="fas fa-envelope"></i> Email</th>
-                        <th><i class="fas fa-hashtag"></i> Age</th>
-                        <th><i class="fas fa-venus-mars"></i> Gender</th>
-                        <th><i class="fas fa-cog"></i> Actions</th>
+                        <th>Receptionist</th> <th>Phone</th> <th>Email</th> <th>Age</th> <th>Gender</th> <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody id="receptionistTable"></tbody>
             </table>
+        </div>
+    </div>
+
+    <div class="toast" id="toastNotification">
+        <div class="toast-icon"></div>
+        <div class="toast-content" id="toastMessage"></div>
+    </div>
+
+    <div class="modal-overlay" id="deleteModal">
+        <div class="modal-content">
+            <div class="modal-icon"><i class="fas fa-exclamation-triangle"></i></div>
+            <h3 class="modal-title">Confirm Deletion</h3>
+            <p class="modal-body">Are you sure?</p>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" id="cancelDelete">Cancel</button>
+                <button class="btn btn-danger" id="confirmDelete">Delete</button>
+            </div>
         </div>
     </div>
 
@@ -152,24 +159,22 @@
     async function fetchReceptionists() {
         try {
             const response = await fetch(API_URL);
-            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+            if (!response.ok) throw new Error(`Could not connect to server.`);
             allReceptionists = await response.json();
             renderReceptionists(allReceptionists);
             updateStats();
         } catch (error) {
             console.error("Failed to fetch receptionists:", error);
-            showErrorState("Could not connect to server. Please ensure the backend is running.");
+            showErrorState(error.message);
         }
     }
 
     function renderReceptionists(receptionists) {
         receptionistTable.innerHTML = "";
         if (receptionists.length === 0) {
-            const message = allReceptionists.length === 0 ? 'Get started by adding your first receptionist.' : 'Try adjusting your search criteria.';
-            showEmptyState(message);
+            showEmptyState('Get started by adding your first receptionist.');
             return;
         }
-
         receptionists.forEach(r => {
             const row = document.createElement("tr");
             row.innerHTML = `
@@ -196,17 +201,32 @@
         });
     }
 
+    // UPDATED deleteReceptionist function
     async function deleteReceptionist(id, name) {
-        // NOTE: window.confirm() can be blocked in some environments.
-        // For this app, we'll proceed as if the user confirmed.
-        // In a real-world app, you would build a custom confirmation modal.
-        try {
-            const response = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
-            if (!response.ok) throw new Error(await response.text());
-            await fetchReceptionists(); // Re-fetch data to update the UI
-        } catch (error) {
-            console.error(`Failed to delete ${name}:`, error);
-            // We can't use alert(), so we'll log to the console.
+        const modal = document.getElementById('deleteModal');
+        const confirmBtn = document.getElementById('confirmDelete');
+        const cancelBtn = document.getElementById('cancelDelete');
+        modal.querySelector('.modal-body').textContent = `Are you sure you want to delete ${name}? This action cannot be undone.`;
+        modal.classList.add('show');
+
+        const userConfirmed = await new Promise(resolve => {
+            confirmBtn.onclick = () => resolve(true);
+            cancelBtn.onclick = () => resolve(false);
+        });
+
+        modal.classList.remove('show');
+
+        if (userConfirmed) {
+            try {
+                const response = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+                if (!response.ok) throw new Error(await response.text() || 'Failed to delete receptionist.');
+                
+                showToast(`Successfully deleted ${name}.`, 'success');
+                await fetchReceptionists(); // Re-fetch data to update the UI
+            } catch (error) {
+                console.error(`Failed to delete ${name}:`, error);
+                showToast(error.message, 'error');
+            }
         }
     }
 
@@ -214,26 +234,46 @@
         const searchTerm = searchInput.value.trim().toLowerCase();
         const filtered = allReceptionists.filter(r =>
             r.fullName.toLowerCase().includes(searchTerm) ||
-            (r.email && r.email.toLowerCase().includes(searchTerm)) ||
-            (r.phone && r.phone.includes(searchTerm))
+            (r.email && r.email.toLowerCase().includes(searchTerm))
         );
         renderReceptionists(filtered);
     });
+    
+    // NEW toast notification function
+    function showToast(message, type = 'success') {
+        const toast = document.getElementById('toastNotification');
+        if (!toast) { // Create toast if it doesn't exist
+            const toastHTML = document.createElement('div');
+            toastHTML.className = 'toast';
+            toastHTML.id = 'toastNotification';
+            toastHTML.innerHTML = `<div class="toast-icon"></div><div class="toast-content" id="toastMessage"></div>`;
+            document.body.appendChild(toastHTML);
+        }
+        
+        const toastEl = document.getElementById('toastNotification');
+        const icon = toastEl.querySelector('.toast-icon');
+        const messageEl = toastEl.querySelector('.toast-content');
+
+        messageEl.textContent = message;
+        toastEl.className = `toast ${type}`;
+        icon.innerHTML = type === 'success' ? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-exclamation-circle"></i>';
+        
+        toastEl.classList.add('show');
+        setTimeout(() => {
+            toastEl.classList.remove('show');
+        }, 3000);
+    }
 
     function updateStats() {
         totalReceptionistsEl.textContent = allReceptionists.length;
     }
 
     function getInitials(name = '') {
-        const parts = name.split(' ');
-        if (parts.length > 1) {
-            return `${parts[0].charAt(0)}${parts[parts.length - 1].charAt(0)}`.toUpperCase();
-        }
-        return name.substring(0, 2).toUpperCase();
+        return name.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
     }
     
     function showEmptyState(message) {
-         receptionistTable.innerHTML = `<tr><td colspan="6" class="empty-state"><i class="fas fa-user-tie"></i><h3>No receptionists found</h3><p>${message}</p></td></tr>`;
+        receptionistTable.innerHTML = `<tr><td colspan="6" class="empty-state"><i class="fas fa-user-tie"></i><h3>No receptionists found</h3><p>${message}</p></td></tr>`;
     }
 
     function showErrorState(message) {
@@ -242,4 +282,3 @@
 </script>
 </body>
 </html>
-

@@ -11,5 +11,7 @@ public interface PatientRepository extends CrudRepository<Patient, Long> {
 
     @Query("SELECT * FROM patients WHERE email = :email")
     Optional<Patient> findByEmail(String email);
+    @Query("SELECT * FROM  patients WHERE full_name=:fullName")
+    Optional<Patient> findByFullName(String fullName);
 
 }
