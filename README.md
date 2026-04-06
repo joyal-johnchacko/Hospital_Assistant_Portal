@@ -27,7 +27,7 @@ A professional, full-stack Hospital Management System designed to digitize medic
 
 The project follows a modern **Decoupled Architecture** (Frontend & Backend separation):
 
-### Backend (Java Spring Boot)
+### Backend (Java + MySQL)
 - **MVC Pattern:** Model-View-Controller architecture for clean code separation.
 - **Data Persistence:** Spring Data JPA with Hibernate for efficient MySQL interaction.
 - **RESTful API:** Exposes endpoints for CRUD operations on Users, Appointments, and Prescriptions.
